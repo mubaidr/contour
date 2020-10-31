@@ -1,0 +1,56 @@
+{
+  "author": "Muhammad Ubaid Raza",
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.7.0",
+    "@types/jest": "^26.0.15",
+    "husky": "^4.3.0",
+    "size-limit": "^4.7.0",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.0.3",
+    "typescript": "^4.0.5"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/contour.js.esm.js",
+  "name": "contour.js",
+  "peerDependencies": {},
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "scripts": {
+    "analyze": "size-limit --why",
+    "build": "tsdx build",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "start": "tsdx watch",
+    "test": "tsdx test"
+  },
+  "size-limit": [
+    {
+      "limit": "10 KB",
+      "path": "dist/contour.js.cjs.production.min.js"
+    },
+    {
+      "limit": "10 KB",
+      "path": "dist/contour.js.esm.js"
+    }
+  ],
+  "typings": "dist/index.d.ts",
+  "version": "0.1.0"
+}

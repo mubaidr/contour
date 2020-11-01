@@ -1,83 +1,68 @@
-const test = require('tape')
-const data = require('./data')
-const contours = require('../dist/contours')
+import { getContours } from '../src'
+import * as data from './data'
 
 test('dot', t => {
-  t.plan(2)
+  expect.assertions(2)
 
-  const found = contours(data.dot)
+  const found = getContours(data.dot)
 
-  t.same(found.length, 1, 'finds a single contour')
+  expect(found.length).toBe(1)
 
-  t.same(found[0], [4], 'the first contour is correct')
-
+  expect(found[0]).toBe([4])
 })
-
 
 test('square', t => {
-  t.plan(2)
+  expect.assertions(2)
 
-  const found = contours(data.square)
+  const found = getContours(data.square)
 
-  t.same(found.length, 1, 'finds a single contour')
+  expect(found.length).toBe(1)
 
-  t.same(found[0], [ 5, 6, 10, 9 ], 'the first contour is correct')
-
+  expect(found[0]).toBe([5, 6, 10, 9])
 })
-
-
 
 test('squares', t => {
-  t.plan(3)
+  expect.assertions(3)
 
-  const found = contours(data.squares)
+  const found = getContours(data.squares)
 
-  t.same(found.length, 2, 'finds two contours')
+  expect(found.length).toBe(2)
 
-  t.same(found[0], [ 9, 10, 18, 17 ], 'the first contour is correct')
-  t.same(found[1], [ 21, 22, 30, 29 ], 'the second contour is correct')
-
-
+  expect(found[0]).toBe([9, 10, 18, 17])
+  expect(found[1]).toBe([21, 22, 30, 29])
 })
-
 
 test('squares_edge', t => {
-  t.plan(3)
+  expect.assertions(3)
 
-  const found = contours(data.squares_edge)
+  const found = getContours(data.squares_edge)
 
-  t.same(found.length, 2, 'finds two contours')
+  expect(found.length).toBe(2)
 
-  t.same(found[0], [ 0,1,6,5 ], 'the first contour is correct')
-  t.same(found[1], [ 8,9,14,13 ], 'the second contour is correct')
-
-
+  expect(found[0]).toBe([0, 1, 6, 5])
+  expect(found[1]).toBe([8, 9, 14, 13])
 })
-
 
 test('connected', t => {
-  t.plan(1)
+  expect.assertions(1)
 
-  const found = contours(data.connected)
+  const found = getContours(data.connected)
 
-  t.same(found.length, 1, 'finds a single contour')
-
+  expect(found.length).toBe(1)
 })
-
 
 test('lots', t => {
-  t.plan(1)
+  expect.assertions(1)
 
-  const found = contours(data.stuff)
+  const found = getContours(data.stuff)
 
-  t.same(found.length, 5, 'finds all five contours')
+  expect(found.length).toBe(5)
 })
 
-
 test('filled', t => {
-  t.plan(1)
+  expect.assertions(1)
 
-  const found = contours(data.large_square)
+  const found = getContours(data.large_square)
 
-  t.same(found.length, 1, 'finds a single contour')
+  expect(found.length).toBe(1)
 })

@@ -1,42 +1,47 @@
-exports.dot = format([
-  '___',
-  '_X_',
-  '___'
-])
+// ImageData-like object
+function format(input: string[]) {
+  const width = input[0].length
+  const height = input.length
+  const data = new Uint8ClampedArray(width * height * 4)
 
-exports.square = format([
-  '____',
-  '_XX_',
-  '_XX_',
-  '____'
-])
+  input
+    .join('')
+    .split('')
+    .map((v: string) => (v != '_' ? 255 : 0))
+    .forEach((v: number, i: number) => {
+      data[i * 4 + 0] = v
+      data[i * 4 + 1] = v
+      data[i * 4 + 2] = v
+      data[i * 4 + 3] = 255
+    })
 
-exports.large_square = format([
+  return { data, width, height }
+}
+
+export const dot = format(['___', '_X_', '___'])
+
+export const square = format(['____', '_XX_', '_XX_', '____'])
+
+export const large_square = format([
   '__________',
   '__XXXXXX__',
   '__XXXXXX__',
   '__XXXXXX__',
   '__XXXXXX__',
-  '__________'
+  '__________',
 ])
 
-exports.squares = format([
+export const squares = format([
   '________',
   '_AA_____',
   '_AA__BB_',
   '_____BB_',
-  '________'
+  '________',
 ])
 
+export const squares_edge = format(['XX___', 'XX_BB', '___BB'])
 
-exports.squares_edge = format([
-  'XX___',
-  'XX_BB',
-  '___BB'
-])
-
-
-exports.tri = format([
+export const tri = format([
   '______________',
   '__1___________',
   '__11__________',
@@ -46,11 +51,10 @@ exports.tri = format([
   '__111111______',
   '__1111111_____',
   '__11111111____',
-  '______________'
+  '______________',
 ])
 
-
-exports.stuff = format([
+export const stuff = format([
   '______________________________',
   '_AA___________________________',
   '_AA_____BBBB__________________',
@@ -64,32 +68,12 @@ exports.stuff = format([
   '_______EE___________DD________',
   '_______EE_________DDDDD_______',
   '_______EE_____________________',
-  '______________________________'
+  '______________________________',
 ])
 
-
-exports.connected = format([
+export const connected = format([
   '___AA____',
   '___AA____',
   '_AA__AA__',
   '_AA__AA__',
 ])
-
-
-// ImageData-like object
-function format(input) {
-  const width = input[0].length
-  const height = input.length
-  const data = new Uint8ClampedArray(width * height * 4)
-
-  input.join('').split('')
-  .map(v => v != '_' ? 255 : 0)
-  .forEach( (v, i) => {
-    data[(i * 4) + 0] = v
-    data[(i * 4) + 1] = v
-    data[(i * 4) + 2] = v
-    data[(i * 4) + 3] = 255
-  })
-
-  return {data, width, height}
-}

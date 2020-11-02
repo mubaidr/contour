@@ -1,7 +1,7 @@
 export const traceContour = (
   imageData: { data: Uint8ClampedArray; width: number; height: number },
   i: number
-) => {
+): number[] => {
   const start = i
   const contour = [start]
 
@@ -53,7 +53,7 @@ export const neighbours = (
   imageData: { data: Uint8ClampedArray; width: number; height: number },
   i: number,
   start: number
-) => {
+): number[] => {
   const w = imageData.width
 
   const mask = []
@@ -84,7 +84,7 @@ export const neighbours = (
   )
 }
 
-export const offset = (array: number[], by: number) => {
+export const offset = (array: number[], by: number): number[] => {
   return array.map((_v, i) => array[(i + by) % array.length])
 }
 
@@ -92,8 +92,8 @@ export function getContours(imageData: {
   data: Uint8ClampedArray
   width: number
   height: number
-}) {
-  const contours = []
+}): number[][] {
+  const contours: number[][] = []
   const seen: any[] = []
   let skipping = false
 

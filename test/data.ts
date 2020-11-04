@@ -1,18 +1,15 @@
-// ImageData-like object
+// ImageData-like object, single channel data
 function format(input: string[]) {
   const width = input[0].length
   const height = input.length
-  const data = new Uint8ClampedArray(width * height * 4)
+  const data = new Uint8ClampedArray(width * height)
 
   input
     .join('')
     .split('')
-    .map((v: string) => (v != '_' ? 255 : 0))
+    .map((v: string) => (v === '_' ? 255 : 0))
     .forEach((v: number, i: number) => {
-      data[i * 4 + 0] = v
-      data[i * 4 + 1] = v
-      data[i * 4 + 2] = v
-      data[i * 4 + 3] = 255
+      data[i] = v
     })
 
   return { data, width, height }

@@ -1,121 +1,141 @@
-export interface ImageLike {
-  data: number[] | Uint8ClampedArray
-  width: number
-  height: number
+import { ImageDataLike } from './types/ImageDataLike'
+import { Point } from './types/Point'
+
+interface PixelCache {
+  [key: string]: boolean
 }
 
-export const traceContour = (imageData: ImageLike, i: number): number[] => {
-  const start = i
-  const contour = [start]
+export class ContourExtractor {
+  data: number[] | Uint8ClampedArray = []
+  width: number = 0
+  height: number = 0
+  /**
+   * Caches information about visited points
+   */
+  visited: PixelCache = {}
 
-  let direction = 3
-  let p = start
+  constructor() {}
 
-  while (true) {
-    const n = neighbours(imageData, p, 0)
-
-    // find the first neighbour starting from
-    // the direction we came from
-    let offset = direction - 3 + 8
-    /*
-    directions:
-      0   1   2
-      7       3
-      6   5   4
-
-    start indexes:
-      5  6   7
-      4      0
-      3  2   1
-    */
-
-    direction = -1
-    for (let idx, i = 0; i < 8; i++) {
-      idx = (i + offset) % 8
-
-      if (imageData.data[n[idx] * 4] > 0) {
-        direction = idx
-        break
-      }
-    }
-
-    p = n[direction]
-
-    if (p === start || !p) {
-      break
-    } else {
-      contour.push(p)
-    }
+  /**
+   * Check if pixel at given point is black
+   * @param point
+   */
+  isBlackPixel(point: Point) {
+    return this.data[point.y * this.width + point.x] === 0
   }
 
-  return contour
-}
-
-// list of neighbours to visit
-export const neighbours = (
-  imageData: ImageLike,
-  i: number,
-  start: number
-): number[] => {
-  const w = imageData.width
-
-  const mask = []
-
-  if (i % w === 0) {
-    mask[0] = mask[6] = mask[7] = -1
+  /**
+   * Check if given point has been visited already
+   * @param point
+   */
+  checkIfVisited(point: Point): boolean {
+    return this.visited[`${point.x},${point.y}`]
   }
 
-  if ((i + 1) % w === 0) {
-    mask[2] = mask[3] = mask[4] = -1
-  }
+  /**
+   * Set point to visited already
+   * @param point
+   */
+  setIsVisited(point: Point): void {}
 
-  // hack - vertical edging matters less because
-  // it will get ignored by matching it to the source
+  /**
+   *
+   *  Moore-Neighbor tracing algorithm:
+   *
+   *  Input: A square tessellation, T, containing a connected component P of black cells.
+   *
+   *  Output: A sequence B (b1, b2 ,..., bk) of boundary pixels i.e. the contour.
+   *
+   *  Define M(a) to be the Moore neighborhood of pixel a.
+   *  Let p denote the current boundary pixel.
+   *  Let c denote the current pixel under consideration i.e. c is in M(p).
+   *
+   *    Begin
+   *
+   *      Set B to be empty.
+   *      From bottom to top and left to right scan the cells of T until a black pixel, s, of P is found.
+   *      Insert s in B.
+   *      Set the current boundary point p to s i.e. p=s
+   *      Backtrack i.e. move to the pixel from which s was entered.
+   *      Set c to be the next clockwise pixel in M(p).
+   *
+   *      While c not equal to s do
+   *
+   *        If c is black
+   *          insert c in B
+   *          set p=c
+   *          backtrack (move the current pixel c to the pixel from which p was entered)
+   *        else
+   *          advance the current pixel c to the next clockwise pixel in M(p)
+   *
+   *      end While
+   *
+   *    End
+   *
+   * @param start first black pixel found
+   */
+  traceContour(start: Point): Point[] {
+    const contour: Point[] = [start]
+    let prev = start.previous()
+    let c = prev.clockwiseNext()
+    let p = start
 
-  return offset(
-    [
-      mask[0] || i - w - 1,
-      mask[1] || i - w,
-      mask[2] || i - w + 1,
-      mask[3] || i + 1,
-      mask[4] || i + w + 1,
-      mask[5] || i + w,
-      mask[6] || i + w - 1,
-      mask[7] || i - 1,
-    ],
-    start
-  )
-}
-
-export const offset = (array: number[], by: number): number[] => {
-  return array.map((_v, i) => array[(i + by) % array.length])
-}
-
-export function getContours(imageData: ImageLike): number[][] {
-  const contours: number[][] = []
-  const seen: any[] = []
-  let skipping = false
-
-  for (var i = 0; i < imageData.data.length; i++) {
-    if (imageData.data[i * 4] > 128) {
-      if (seen[i] || skipping) {
-        skipping = true
+    while (!start.isEqualTo(c)) {
+      if (this.isBlackPixel(c)) {
+        contour.push(c)
+        p = c
+        c = prev
       } else {
-        var contour = traceContour(imageData, i)
-
-        contours.push(contour)
-
-        // this could be a _lot_ more efficient
-        contour.forEach(c => {
-          seen[c] = true
-        })
+        c = c.clockwiseNext()
       }
-    } else {
-      skipping = false
     }
+
+    // TODO: set this.setIsVisited(c) if c isBlackPixel
+    // keep track of visited contour pixels
+    this.setIsVisited(start)
+
+    return contour
   }
 
-  return contours
-}
+  /**
+   * Return contour collection
+   * @param imageData
+   */
+  extract(imageData: ImageDataLike): Point[][] {
+    this.data = imageData.data
+    this.width = imageData.width
+    this.height = imageData.height
 
-export default getContours
+    const contours: Point[][] = []
+    let skipping = false
+
+    // check if image data contains only one channel
+    if (this.data.length !== this.width * this.height) {
+      throw 'Image data is malformed or contains multiple channels...'
+    }
+
+    // find first black pixel
+    for (let x = 1; x < this.width - 1; x += 1) {
+      for (let y = 1; y < this.height - 1; y += 1) {
+        let point = new Point(x, y)
+
+        // white pixel
+        if (!this.isBlackPixel(point)) {
+          skipping = false
+          continue
+        }
+
+        // we have already visited this pixel or we have traced this contour
+        if (this.checkIfVisited(point) || skipping) {
+          skipping = true
+          continue
+        }
+
+        // we will trace contour starting from this pixel
+        contours.push(this.traceContour(point))
+      }
+    }
+
+    return contours
+  }
+}

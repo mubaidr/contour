@@ -1,42 +1,30 @@
 import { ImageDataLike } from './types/ImageDataLike'
 import { Point } from './types/Point'
 
-interface PixelCache {
-  [key: string]: boolean
-}
-
-export class ContourExtractor {
-  data: number[] | Uint8ClampedArray = []
-  width: number = 0
-  height: number = 0
+export class ContourFinder {
+  private data: number[] | Uint8ClampedArray
+  private width: number
+  private height: number
   /**
    * Caches information about visited points
    */
-  visited: PixelCache = {}
+  private visited: { [key: number]: boolean } = {}
 
-  constructor() {}
-
-  /**
-   * Check if pixel at given point is black
-   * @param point
-   */
-  isBlackPixel(point: Point) {
-    return this.data[point.y * this.width + point.x] === 0
+  constructor(imageData: ImageDataLike) {
+    this.data = imageData.data
+    this.width = imageData.width
+    this.height = imageData.height
   }
 
-  /**
-   * Check if given point has been visited already
-   * @param point
-   */
-  checkIfVisited(point: Point): boolean {
-    return this.visited[`${point.x},${point.y}`]
+  indexToPoint(index: number): Point {
+    // const x = index %
+    return { x: index, y: index }
   }
 
-  /**
-   * Set point to visited already
-   * @param point
-   */
-  setIsVisited(point: Point): void {}
+  nextClockwise(): number {
+    // TODO: create a map to find next pixel: https://github.com/Dkendal/Moore-Neighbor_Contour_Tracer/blob/master/ContourTrace.cs#L36
+    return 0
+  }
 
   /**
    *
@@ -72,27 +60,31 @@ export class ContourExtractor {
    *
    *    End
    *
-   * @param start first black pixel found
+   * @param first first black pixel found
+   * @param firstPrevious Previous pixel for first
    */
-  traceContour(start: Point): Point[] {
-    const contour: Point[] = [start]
-    let prev = start.previous()
-    let c = prev.clockwiseNext()
-    let p = start
+  private traceContour(first: number, firstPrevious: number): Point[] {
+    const contour: Point[] = [this.indexToPoint(first)]
+    let previous = firstPrevious
+    let boundary = first
+    let current = this.nextClockwise()
 
-    while (!start.isEqualTo(c)) {
-      if (this.isBlackPixel(c)) {
-        contour.push(c)
-        p = c
-        c = prev
+    while (current !== first && previous !== firstPrevious) {
+      // black pixel
+      if (this.data[current] === 0) {
+        previous = boundary
+        boundary = current
+        this.visited[current] = true
+        contour.push(this.indexToPoint(current))
       } else {
-        c = c.clockwiseNext()
+        previous = current
       }
+
+      current = this.nextClockwise()
     }
 
-    // TODO: set this.setIsVisited(c) if c isBlackPixel
     // keep track of visited contour pixels
-    this.setIsVisited(start)
+    this.visited[first] = true
 
     return contour
   }
@@ -101,39 +93,30 @@ export class ContourExtractor {
    * Return contour collection
    * @param imageData
    */
-  extract(imageData: ImageDataLike): Point[][] {
-    this.data = imageData.data
-    this.width = imageData.width
-    this.height = imageData.height
-
+  public extract(): Point[][] {
     const contours: Point[][] = []
+    let previous = 1
     let skipping = false
 
-    // check if image data contains only one channel
-    if (this.data.length !== this.width * this.height) {
-      throw 'Image data is malformed or contains multiple channels...'
-    }
-
     // find first black pixel
-    for (let x = 1; x < this.width - 1; x += 1) {
-      for (let y = 1; y < this.height - 1; y += 1) {
-        let point = new Point(x, y)
-
-        // white pixel
-        if (!this.isBlackPixel(point)) {
-          skipping = false
-          continue
-        }
-
-        // we have already visited this pixel or we have traced this contour
-        if (this.checkIfVisited(point) || skipping) {
-          skipping = true
-          continue
-        }
-
-        // we will trace contour starting from this pixel
-        contours.push(this.traceContour(point))
+    for (let i = 0; i < this.data.length; i += 1) {
+      // white pixel
+      if (this.data[i] !== 0) {
+        skipping = false
+        continue
       }
+
+      // we have already visited this pixel or we have traced this contour
+      if (this.visited[i] || skipping) {
+        skipping = true
+        continue
+      }
+
+      // we will trace contour starting from this pixel
+      contours.push(this.traceContour(i, previous))
+
+      // store previous entry point
+      previous = i
     }
 
     return contours

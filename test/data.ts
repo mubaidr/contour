@@ -15,17 +15,33 @@ function format(input: string[]) {
   return { data, width, height }
 }
 
-export const dot = format(['___', '_X_', '___'])
+// prettier-ignore
+export const dot = format([
+  '___',
+  '_A_',
+  '___'
+])
 
-export const square = format(['____', '_XX_', '_XX_', '____'])
+// prettier-ignore
+export const square = format([
+  '____',
+  '_AA_',
+  '_AA_',
+  '____'
+])
 
-export const large_square = format([
-  '__________',
-  '__XXXXXX__',
-  '__XXXXXX__',
-  '__XXXXXX__',
-  '__XXXXXX__',
-  '__________',
+// prettier-ignore
+export const squares_edge = format([
+  'AA___',
+  'AA_BB',
+  '___BB'
+])
+
+export const connected = format([
+  '___AA____',
+  '___AA____',
+  '_AA__AA__',
+  '_AA__AA__',
 ])
 
 export const squares = format([
@@ -36,18 +52,25 @@ export const squares = format([
   '________',
 ])
 
-export const squares_edge = format(['XX___', 'XX_BB', '___BB'])
+export const large_square = format([
+  '__________',
+  '__AAAAAA__',
+  '__AAAAAA__',
+  '__AAAAAA__',
+  '__AAAAAA__',
+  '__________',
+])
 
 export const tri = format([
   '______________',
-  '__1___________',
-  '__11__________',
-  '__111_________',
-  '__1111________',
-  '__11111_______',
-  '__111111______',
-  '__1111111_____',
-  '__11111111____',
+  '__A___________',
+  '__AA__________',
+  '__AAA_________',
+  '__AAAA________',
+  '__AAAAA_______',
+  '__AAAAAA______',
+  '__AAAAAAA_____',
+  '__AAAAAAAA____',
   '______________',
 ])
 
@@ -66,11 +89,4 @@ export const stuff = format([
   '_______EE_________DDDDD_______',
   '_______EE_____________________',
   '______________________________',
-])
-
-export const connected = format([
-  '___AA____',
-  '___AA____',
-  '_AA__AA__',
-  '_AA__AA__',
 ])

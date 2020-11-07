@@ -1,10 +1,32 @@
 import { ImageDataLike } from './types/ImageDataLike'
 import { Point } from './types/Point'
 
+// prettier-ignore
+/**
+ * Clockwise pixel offset collection
+ */
+const clockwiseOffset: {
+  [key: string]: number[]
+} = {
+  '1,0'  : [ 1,  1], // right --> right-down
+  '1,1' : [ 0,  1], // right-down --> down
+  '0,1' : [-1,  1], // down --> down-left
+  '-1,1': [-1,  0], // down-left --> left
+  '0,0'  : [ 0,  0], // not required, but yeah... just to complete set
+  '-1,0' : [-1, -1], // left --> left-top
+  '-1,-1' : [ 0, -1], // left-top --> top
+  '0,-1'  : [ 1, -1], // top --> top-right
+  '1,-1'  : [ 1,  0], // top-right --> right
+}
+
+/**
+ * Contour tracing on a black and white image
+ */
 export class ContourFinder {
   private data: number[] | Uint8ClampedArray
   private width: number
   private height: number
+
   /**
    * Caches information about visited points
    */
@@ -16,14 +38,39 @@ export class ContourFinder {
     this.height = imageData.height
   }
 
+  /**
+   * Converts index to x,y postion of pixel
+   * @param index
+   */
   indexToPoint(index: number): Point {
-    // const x = index %
-    return { x: index, y: index }
+    const x = index % this.width
+    const y = (index - x) / this.width
+    return { x, y }
   }
 
-  nextClockwise(): number {
-    // TODO: create a map to find next pixel: https://github.com/Dkendal/Moore-Neighbor_Contour_Tracer/blob/master/ContourTrace.cs#L36
-    return 0
+  /**
+   * Converts x,y to index postion of pixel
+   * @param point
+   */
+  pointToIndex(point: Point): number {
+    return point.y * this.width + point.x
+  }
+
+  /**
+   * Returns next clockwise index based on current position and direction
+   * @param previous previous index
+   * @param boundary current boundary index
+   */
+  nextClockwise(previous: number, boundary: number): number {
+    const pPoint = this.indexToPoint(previous)
+    const bPoint = this.indexToPoint(boundary)
+    const direction = `${bPoint.x - pPoint.x},${bPoint.y - pPoint.y}`
+    const [xOffset, yOffset] = clockwiseOffset[direction]
+
+    return this.pointToIndex({
+      x: pPoint.x + xOffset,
+      y: pPoint.y + yOffset,
+    })
   }
 
   /**
@@ -67,9 +114,11 @@ export class ContourFinder {
     const contour: Point[] = [this.indexToPoint(first)]
     let previous = firstPrevious
     let boundary = first
-    let current = this.nextClockwise()
+    let current = -1
 
     while (current !== first && previous !== firstPrevious) {
+      current = this.nextClockwise(previous, boundary)
+
       // black pixel
       if (this.data[current] === 0) {
         previous = boundary
@@ -79,8 +128,6 @@ export class ContourFinder {
       } else {
         previous = current
       }
-
-      current = this.nextClockwise()
     }
 
     // keep track of visited contour pixels
@@ -95,7 +142,7 @@ export class ContourFinder {
    */
   public extract(): Point[][] {
     const contours: Point[][] = []
-    let previous = 1
+    let previous = 0
     let skipping = false
 
     // find first black pixel

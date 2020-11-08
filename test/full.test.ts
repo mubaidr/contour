@@ -5,17 +5,17 @@ describe('ContourFinder', () => {
   test(' index to point converter', () => {
     const cf = new ContourFinder(data.dot)
 
-    expect(cf.indexToPoint(0)).toMatchObject({
+    expect(cf.indexToPoint(0)).toEqual({
       x: 0,
       y: 0,
     })
 
-    expect(cf.indexToPoint(4)).toMatchObject({
+    expect(cf.indexToPoint(4)).toEqual({
       x: 1,
       y: 1,
     })
 
-    expect(cf.indexToPoint(8)).toMatchObject({
+    expect(cf.indexToPoint(8)).toEqual({
       x: 2,
       y: 2,
     })
@@ -61,28 +61,50 @@ describe('ContourFinder', () => {
     const found = new ContourFinder(data.dot).extract()
 
     expect(found.length).toBe(1)
-    expect(found[0]).toEqual([4])
+    expect(found[0]).toEqual([
+      {
+        x: 1,
+        y: 1,
+      },
+    ])
   })
 
   test('square', () => {
     const found = new ContourFinder(data.square).extract()
 
+    console.log(found)
+
     expect(found.length).toBe(1)
-    expect(found[0]).toEqual([5, 6, 10, 9])
+    expect(found[0]).toEqual([
+      { x: 1, y: 1 },
+      { x: 1, y: 2 },
+      { x: 2, y: 2 },
+      { x: 2, y: 1 },
+    ])
   })
 
-  test('squares', () => {
-    expect.assertions(3)
-
+  test('multiple squares', () => {
     const found = new ContourFinder(data.squares).extract()
 
     expect(found.length).toBe(2)
-    expect(found[0]).toEqual([9, 10, 18, 17])
-    expect(found[1]).toEqual([21, 22, 30, 29])
+    expect(found[0]).toEqual([
+      { x: 1, y: 1 },
+      { x: 1, y: 2 },
+      { x: 2, y: 2 },
+      { x: 2, y: 1 },
+    ])
+    expect(found[1]).toEqual([
+      { x: 5, y: 2 },
+      { x: 5, y: 3 },
+      { x: 6, y: 3 },
+      { x: 6, y: 2 },
+    ])
   })
 
-  test('squares_edge', () => {
+  test('edge squares', () => {
     const found = new ContourFinder(data.squares_edge).extract()
+
+    console.log(found)
 
     expect(found.length).toBe(2)
     expect(found[0]).toEqual([0, 1, 6, 5])
@@ -92,17 +114,23 @@ describe('ContourFinder', () => {
   test('connected', () => {
     const found = new ContourFinder(data.connected).extract()
 
+    console.log(found)
+
     expect(found.length).toBe(1)
   })
 
   test('lots', () => {
     const found = new ContourFinder(data.stuff).extract()
 
+    console.log(found)
+
     expect(found.length).toBe(5)
   })
 
   test('filled', () => {
     const found = new ContourFinder(data.large_square).extract()
+
+    console.log(found)
 
     expect(found.length).toBe(1)
   })

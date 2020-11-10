@@ -66,8 +66,6 @@ export class ContourFinder {
       return index
     } else if (point.x === 0 && point.y > 0) {
       point.y -= 1
-    } else if (point.y === 0 && point.x > 0) {
-      point.x -= 1
     } else {
       point.x -= 1
     }
@@ -83,14 +81,9 @@ export class ContourFinder {
   nextClockwise(previous: number, boundary: number): number {
     const pPoint = this.indexToPoint(previous)
     const bPoint = this.indexToPoint(boundary)
-    const direction = `${bPoint.x - pPoint.x},${bPoint.y - pPoint.y}`
-    const [xOffset, yOffset] = clockwiseOffset[direction]
-    const nextIndex = this.pointToIndex({
-      x: pPoint.x + xOffset,
-      y: pPoint.y + yOffset,
-    })
 
-    return nextIndex
+    // TODO: for loop keeping track of last indx travvelled, untill a black pixel is found in neiberhood
+    return 0
   }
 
   /**
@@ -147,10 +140,13 @@ export class ContourFinder {
     /**
      * The point currently being inspected
      */
-    let current = this.nextClockwise(previous, boundary)
+    let current = -1
 
     // Jacob's stopping criterion: current pixel is revisited from same direction
     while (current !== first || previous !== firstPrevious) {
+      // next clockwise index
+      current = this.nextClockwise(previous, boundary)
+
       // black pixel
       if (this.data[current] === 0) {
         previous = boundary
@@ -160,9 +156,6 @@ export class ContourFinder {
       } else {
         previous = current
       }
-
-      // next clockwise index
-      current = this.nextClockwise(previous, boundary)
     }
 
     // keep track of visited contour pixels

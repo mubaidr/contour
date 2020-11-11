@@ -5,18 +5,16 @@ import { Point } from './types/Point'
  * Moore neighborhood
  */
 // prettier-ignore
-const clockwiseOffset: {
-  [key: string]: Array<number>
-} = {
-  '1,0': [1, 1], // right --> right-down
-  '1,1': [0, 1], // right-down --> down
-  '0,1': [-1, 1], // down --> down-left
-  '-1,1': [-1, 0], // down-left --> left
-  '-1,0': [-1, -1], // left --> left-top
-  '-1,-1': [0, -1], // left-top --> top
-  '0,-1': [1, -1], // top --> top-right
-  '1,-1': [1, 0], // top-right --> right
-}
+const Neighberhood: Array<Array<number>> = [
+  [0, -1],  // top
+  [1, -1],  // top-right
+  [1, 0],   // right
+  [1, 1],   // right-down
+  [0, 1],   // down
+  [-1, 1],  // down-left
+  [-1, 0],  // left
+  [-1, -1], // left-top
+]
 
 /**
  * Contour tracing on a black and white image
@@ -62,9 +60,11 @@ export class ContourFinder {
   getFirstPrevious(index: number): number {
     const point = this.indexToPoint(index)
 
-    if (point.x === 0 && point.y === 0) {
-      return index
-    } else if (point.x === 0 && point.y > 0) {
+    if (point.x === 0) {
+      if (point.y === 0) {
+        return index
+      }
+
       point.y -= 1
     } else {
       point.x -= 1
@@ -79,11 +79,22 @@ export class ContourFinder {
    * @param boundary current boundary index
    */
   nextClockwise(previous: number, boundary: number): number {
-    const pPoint = this.indexToPoint(previous)
     const bPoint = this.indexToPoint(boundary)
 
-    // TODO: for loop keeping track of last indx travvelled, untill a black pixel is found in neiberhood
-    return 0
+    for (let i = 0; i < Neighberhood.length; i += 1) {
+      const [x, y] = Neighberhood[i]
+      let cx = bPoint.x + x
+      let cy = bPoint.y + y
+      let index = cy * this.width + cx
+
+      if (index === previous) continue
+
+      if (this.data[index] === 0) {
+        return index
+      }
+    }
+
+    return boundary
   }
 
   /**

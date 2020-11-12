@@ -5,16 +5,18 @@ import { Point } from './types/Point'
  * Moore neighborhood
  */
 // prettier-ignore
-const Neighberhood: Array<Array<number>> = [
-  [0, -1],  // top
-  [1, -1],  // top-right
-  [1, 0],   // right
-  [1, 1],   // right-down
-  [0, 1],   // down
-  [-1, 1],  // down-left
-  [-1, 0],  // left
-  [-1, -1], // left-top
-]
+const clockwiseOffset: {
+  [key: string]: Array<number>
+} = {
+  '1,0': [1, 1], // right --> right-down
+  '1,1': [0, 1], // right-down --> down
+  '0,1': [-1, 1], // down --> down-left
+  '-1,1': [-1, 0], // down-left --> left
+  '-1,0': [-1, -1], // left --> left-top
+  '-1,-1': [0, -1], // left-top --> top
+  '0,-1': [1, -1], // top --> top-right
+  '1,-1': [1, 0], // top-right --> right
+}
 
 /**
  * Contour tracing on a black and white image
@@ -78,23 +80,33 @@ export class ContourFinder {
    * @param previous previous index
    * @param boundary current boundary index
    */
-  nextClockwise(previous: number, boundary: number): number {
-    const bPoint = this.indexToPoint(boundary)
-
-    for (let i = 0; i < Neighberhood.length; i += 1) {
-      const [x, y] = Neighberhood[i]
-      let cx = bPoint.x + x
-      let cy = bPoint.y + y
-      let index = cy * this.width + cx
-
-      if (index === previous) continue
-
-      if (this.data[index] === 0) {
-        return index
-      }
+  nextClockwise(previous: Point, boundary: Point, start = previous): Point {
+    const [xOffset, yOffset] = clockwiseOffset[
+      `${previous.x - boundary.x},${previous.y - boundary.y}`
+    ]
+    const nextPoint = {
+      x: previous.x + xOffset,
+      y: previous.y + yOffset,
     }
 
-    return boundary
+    if (
+      nextPoint.x < 0 ||
+      nextPoint.y < 0 ||
+      nextPoint.x >= this.width ||
+      nextPoint.y >= this.height
+    ) {
+      return this.nextClockwise(nextPoint, boundary, start)
+    }
+
+    if (nextPoint.x === start.x && nextPoint.y === start.y) {
+      return start
+    }
+
+    if (this.data[this.pointToIndex(nextPoint)] !== 0) {
+      return this.nextClockwise(nextPoint, boundary, start)
+    }
+
+    return nextPoint
   }
 
   /**
@@ -156,7 +168,12 @@ export class ContourFinder {
     // Jacob's stopping criterion: current pixel is revisited from same direction
     while (current !== first || previous !== firstPrevious) {
       // next clockwise index
-      current = this.nextClockwise(previous, boundary)
+      current = this.pointToIndex(
+        this.nextClockwise(
+          this.indexToPoint(previous),
+          this.indexToPoint(boundary)
+        )
+      )
 
       // black pixel
       if (this.data[current] === 0) {

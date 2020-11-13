@@ -24,9 +24,9 @@ const clockwiseOffset: {
  * Contour tracing on a black and white image
  */
 export class ContourFinder {
-  private data: Uint8ClampedArray | Array<number>
-  private width: number
-  private height: number
+  private readonly data: Uint8ClampedArray | number[]
+  private readonly width: number
+  private readonly height: number
 
   /**
    * Caches information about visited points
@@ -58,15 +58,13 @@ export class ContourFinder {
   }
 
   /**
-   * Get previous index for given index
+   * Get previous point for given point
    * @param index
    */
-  getFirstPrevious(index: number): number {
-    const point = this.indexToPoint(index)
-
+  getFirstPrevious(point: Point): Point {
     if (point.x === 0) {
       if (point.y === 0) {
-        return index
+        return point
       }
 
       point.y -= 1
@@ -74,15 +72,22 @@ export class ContourFinder {
       point.x -= 1
     }
 
-    return this.pointToIndex(point)
+    return point
   }
 
   /**
-   * Returns next clockwise index based on current position and direction
-   * @param previous previous index
-   * @param boundary current boundary index
+   * Returns next clockwise pixel based on current position and direction
+   * @param previous previous point
+   * @param boundary current boundary point
    */
-  nextClockwise(previous: Point, boundary: Point, start = previous): Point {
+  nextClockwise(
+    previous: Point,
+    boundary: Point,
+    start = previous
+  ): {
+    previous: Point
+    boundary: Point
+  } {
     const offset =
       clockwiseOffset[`${previous.x - boundary.x},${previous.y - boundary.y}`]
 
@@ -91,24 +96,27 @@ export class ContourFinder {
       y: boundary.y + offset.y,
     }
 
+    if (nextPoint.x === start.x && nextPoint.y === start.y) {
+      return {
+        previous,
+        boundary,
+      }
+    }
+
     if (
       nextPoint.x < 0 ||
       nextPoint.y < 0 ||
       nextPoint.x >= this.width ||
-      nextPoint.y >= this.height
+      nextPoint.y >= this.height ||
+      this.data[this.pointToIndex(nextPoint)] !== 0
     ) {
       return this.nextClockwise(nextPoint, boundary, start)
     }
 
-    if (nextPoint.x === start.x && nextPoint.y === start.y) {
-      return start
+    return {
+      previous: nextPoint,
+      boundary,
     }
-
-    if (this.data[this.pointToIndex(nextPoint)] !== 0) {
-      return this.nextClockwise(nextPoint, boundary, start)
-    }
-
-    return nextPoint
   }
 
   /**
@@ -148,12 +156,12 @@ export class ContourFinder {
    * @param first first black pixel found
    * @param firstPrevious Previous pixel for first
    */
-  private traceContour(first: number): Array<Point> {
-    const contour: Array<Point> = [this.indexToPoint(first)]
+  private traceContour(first: Point): Point[] {
+    const contour: Point[] = [first]
     /**
      * the point we entered first from
      */
-    let firstPrevious = this.getFirstPrevious(first)
+    const firstPrevious = this.getFirstPrevious(first)
     /**
      * The point we entered current from
      */
@@ -162,34 +170,15 @@ export class ContourFinder {
      * current known black pixel we're finding neighbours of
      */
     let boundary = first
-    /**
-     * The point currently being inspected
-     */
-    let current = -1
 
     // Jacob's stopping criterion: current pixel is revisited from same direction
-    while (current !== first || previous !== firstPrevious) {
-      // next clockwise index
-      current = this.pointToIndex(
-        this.nextClockwise(
-          this.indexToPoint(previous),
-          this.indexToPoint(boundary)
-        )
-      )
+    while (previous !== firstPrevious || boundary !== first) {
+      // find next boundary pixel in moore's neighberhood and previous pixel
+      ;({ previous, boundary } = this.nextClockwise(previous, boundary))
 
-      // black pixel
-      if (this.data[current] === 0) {
-        previous = boundary
-        boundary = current
-        this.visited[current] = true
-        contour.push(this.indexToPoint(current))
-      } else {
-        previous = current
-      }
+      // keep track of visited contour pixels
+      this.visited[this.pointToIndex(boundary)] = true
     }
-
-    // keep track of visited contour pixels
-    this.visited[first] = true
 
     return contour
   }
@@ -198,26 +187,38 @@ export class ContourFinder {
    * Returns contour collection
    * @param imageData
    */
-  public extract(): Array<Array<Point>> {
-    const contours: Array<Array<Point>> = []
+  public extract(): Point[][] {
+    const contours: Point[][] = []
     let skipping = false
 
     // find first black pixel
-    for (let i = 0; i < this.data.length; i += 1) {
-      // white pixel
-      if (this.data[i] !== 0) {
-        skipping = false
-        continue
-      }
+    for (let x = 0; x < this.data.length; x += 1) {
+      for (let y = 0; y < this.data.length; y += 1) {
+        const index = this.pointToIndex({ x, y })
 
-      // we have already visited this pixel or we have traced this contour
-      if (this.visited[i] || skipping) {
-        skipping = true
-        continue
-      }
+        // white pixel
+        if (this.data[index] !== 0) {
+          skipping = false
+          continue
+        }
 
-      // we will trace contour starting from this pixel
-      contours.push(this.traceContour(i))
+        // we have already visited this pixel or we have traced this contour
+        if (this.visited[index] || skipping) {
+          skipping = true
+          continue
+        }
+
+        // keep track of visited contour pixel
+        this.visited[index] = true
+
+        // we will trace contour starting from this black pixel
+        contours.push(
+          this.traceContour({
+            x,
+            y,
+          })
+        )
+      }
     }
 
     return contours

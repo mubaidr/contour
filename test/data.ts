@@ -1,5 +1,7 @@
+import { ImageDataLike } from '../src/types/ImageDataLike'
+
 // ImageData-like object, single channel data
-function format(input: string[]) {
+function format(input: string[]): ImageDataLike {
   const width = input[0].length
   const height = input.length
   const data = new Uint8ClampedArray(width * height)
@@ -31,7 +33,7 @@ export const square = format([
 ])
 
 // prettier-ignore
-export const squares_edge = format([
+export const squaresEdge = format([
   'AA___',
   'AA_BB',
   '___BB'
@@ -52,7 +54,7 @@ export const squares = format([
   '________',
 ])
 
-export const large_square = format([
+export const largeSquare = format([
   '__________',
   '__AAAAAA__',
   '__AAAAAA__',

@@ -2,90 +2,6 @@ import { ContourFinder } from '../src'
 import * as data from './data'
 
 describe('ContourFinder', () => {
-  test(' index to point converter', () => {
-    const cf = new ContourFinder(data.dot)
-
-    expect(cf.indexToPoint(0)).toEqual({
-      x: 0,
-      y: 0,
-    })
-
-    expect(cf.indexToPoint(4)).toEqual({
-      x: 1,
-      y: 1,
-    })
-
-    expect(cf.indexToPoint(8)).toEqual({
-      x: 2,
-      y: 2,
-    })
-  })
-
-  test('point to index converter', () => {
-    const cf = new ContourFinder(data.dot)
-
-    expect(
-      cf.pointToIndex({
-        x: 0,
-        y: 0,
-      })
-    ).toBe(0)
-
-    expect(
-      cf.pointToIndex({
-        x: 1,
-        y: 1,
-      })
-    ).toBe(4)
-
-    expect(
-      cf.pointToIndex({
-        x: 2,
-        y: 2,
-      })
-    ).toBe(8)
-  })
-
-  test('dot nextClockwise', () => {
-    const cf = new ContourFinder(data.dot)
-
-    expect(
-      cf.nextClockwise(
-        {
-          x: 0,
-          y: 0,
-        },
-        {
-          x: 1,
-          y: 1,
-        }
-      )
-    ).toEqual({
-      x: 0,
-      y: 0,
-    })
-  })
-
-  test('square nextClockwise', () => {
-    const cf = new ContourFinder(data.square)
-
-    expect(
-      cf.nextClockwise(
-        {
-          x: 0,
-          y: 0,
-        },
-        {
-          x: 1,
-          y: 1,
-        }
-      )
-    ).toEqual({
-      x: 0,
-      y: 0,
-    })
-  })
-
   test('dot', () => {
     const found = new ContourFinder(data.dot).extract()
 
@@ -131,7 +47,7 @@ describe('ContourFinder', () => {
   })
 
   test('edge squares', () => {
-    const found = new ContourFinder(data.squares_edge).extract()
+    const found = new ContourFinder(data.squaresEdge).extract()
 
     console.log(found)
 
@@ -157,7 +73,7 @@ describe('ContourFinder', () => {
   })
 
   test('filled', () => {
-    const found = new ContourFinder(data.large_square).extract()
+    const found = new ContourFinder(data.largeSquare).extract()
 
     console.log(found)
 

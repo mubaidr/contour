@@ -1,27 +1,106 @@
-// import * as contours from '../src'
-// import * as data from './data'
+import { ContourFinder } from '../src'
+import * as data from './data'
 
-// test('trace contour', () => {
-//   expect(contours.traceContour(data.square, 5)).toEqual([5, 6, 10, 9])
-//   expect(contours.traceContour(data.dot, 4)).toEqual([4])
-// })
+describe('index <-> point conversion', () => {
+  test('index to point', () => {
+    const cf = new ContourFinder(data.dot)
 
-// test('neighbours', () => {
-//   expect(
-//     contours.neighbours({ data: data.square.data, width: 4, height: 4 }, 5, 0)
-//   ).toEqual([0, 1, 2, 6, 10, 9, 8, 4])
+    expect(cf.indexToPoint(0)).toEqual({
+      x: 0,
+      y: 0,
+    })
 
-//   expect(
-//     contours.neighbours({ data: data.square.data, width: 4, height: 4 }, 5, 1)
-//   ).toEqual([1, 2, 6, 10, 9, 8, 4, 0])
-// })
+    expect(cf.indexToPoint(4)).toEqual({
+      x: 1,
+      y: 1,
+    })
 
-// test('neighbours edge', () => {
-//   expect(
-//     contours.neighbours({ data: data.square.data, width: 4, height: 4 }, 0, 0)
-//   ).toEqual([-1, -4, -3, 1, 5, 4, -1, -1])
-// })
+    expect(cf.indexToPoint(8)).toEqual({
+      x: 2,
+      y: 2,
+    })
+  })
 
-// test('offset', () => {
-//   expect(contours.offset([1, 2, 3, 4, 5, 6], 3)).toEqual([4, 5, 6, 1, 2, 3])
-// })
+  test('point to index', () => {
+    const cf = new ContourFinder(data.dot)
+
+    expect(
+      cf.pointToIndex({
+        x: 0,
+        y: 0,
+      })
+    ).toBe(0)
+
+    expect(
+      cf.pointToIndex({
+        x: 1,
+        y: 1,
+      })
+    ).toBe(4)
+
+    expect(
+      cf.pointToIndex({
+        x: 2,
+        y: 2,
+      })
+    ).toBe(8)
+  })
+})
+
+describe('nextClockwise', () => {
+  test('dot', () => {
+    const cf = new ContourFinder(data.dot)
+
+    expect(
+      cf.nextClockwise(
+        {
+          x: 0,
+          y: 0,
+        },
+        {
+          x: 1,
+          y: 1,
+        }
+      )
+    ).toEqual({
+      x: 0,
+      y: 0,
+    })
+  })
+
+  test('square', () => {
+    const cf = new ContourFinder(data.square)
+
+    expect(
+      cf.nextClockwise(
+        {
+          x: 0,
+          y: 0,
+        },
+        {
+          x: 1,
+          y: 1,
+        }
+      )
+    ).toEqual({
+      x: 2,
+      y: 1,
+    })
+
+    expect(
+      cf.nextClockwise(
+        {
+          x: 0,
+          y: 0,
+        },
+        {
+          x: 1,
+          y: 1,
+        }
+      )
+    ).toEqual({
+      x: 2,
+      y: 1,
+    })
+  })
+})

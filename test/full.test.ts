@@ -46,7 +46,7 @@ describe('ContourFinder', () => {
     ).toBe(8)
   })
 
-  test('nextClockwise', () => {
+  test('dot nextClockwise', () => {
     const cf = new ContourFinder(data.dot)
 
     expect(
@@ -60,16 +60,30 @@ describe('ContourFinder', () => {
           y: 1,
         }
       )
-    ).toBe({
-      x: 1,
+    ).toEqual({
+      x: 0,
       y: 0,
     })
+  })
 
-    // expect(cf.nextClockwise(1, 4)).toBe(3)
-    // expect(cf.nextClockwise(3, 4)).toBe(7)
-    // expect(cf.nextClockwise(5, 4)).toBe(1)
-    // expect(cf.nextClockwise(5, 8)).toBe(7)
-    // expect(cf.nextClockwise(6, 4)).toBe(7)
+  test('square nextClockwise', () => {
+    const cf = new ContourFinder(data.square)
+
+    expect(
+      cf.nextClockwise(
+        {
+          x: 0,
+          y: 0,
+        },
+        {
+          x: 1,
+          y: 1,
+        }
+      )
+    ).toEqual({
+      x: 0,
+      y: 0,
+    })
   })
 
   test('dot', () => {

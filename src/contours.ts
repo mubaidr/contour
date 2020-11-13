@@ -4,18 +4,20 @@ import { Point } from './types/Point'
 /**
  * Moore neighborhood
  */
-// prettier-ignore
 const clockwiseOffset: {
-  [key: string]: Array<number>
+  [key: string]: {
+    x: number
+    y: number
+  }
 } = {
-  '1,0': [1, 1], // right --> right-down
-  '1,1': [0, 1], // right-down --> down
-  '0,1': [-1, 1], // down --> down-left
-  '-1,1': [-1, 0], // down-left --> left
-  '-1,0': [-1, -1], // left --> left-top
-  '-1,-1': [0, -1], // left-top --> top
-  '0,-1': [1, -1], // top --> top-right
-  '1,-1': [1, 0], // top-right --> right
+  '1,0': { x: 1, y: 1 }, // right --> right-down
+  '1,1': { x: 0, y: 1 }, // right-down --> down
+  '0,1': { x: -1, y: 1 }, // down --> down-left
+  '-1,1': { x: -1, y: 0 }, // down-left --> left
+  '-1,0': { x: -1, y: -1 }, // left --> left-top
+  '-1,-1': { x: 0, y: -1 }, // left-top --> top
+  '0,-1': { x: 1, y: -1 }, // top --> top-right
+  '1,-1': { x: 1, y: 0 }, // top-right --> right
 }
 
 /**
@@ -81,12 +83,12 @@ export class ContourFinder {
    * @param boundary current boundary index
    */
   nextClockwise(previous: Point, boundary: Point, start = previous): Point {
-    const [xOffset, yOffset] = clockwiseOffset[
-      `${previous.x - boundary.x},${previous.y - boundary.y}`
-    ]
+    const offset =
+      clockwiseOffset[`${previous.x - boundary.x},${previous.y - boundary.y}`]
+
     const nextPoint = {
-      x: previous.x + xOffset,
-      y: previous.y + yOffset,
+      x: boundary.x + offset.x,
+      y: boundary.y + offset.y,
     }
 
     if (

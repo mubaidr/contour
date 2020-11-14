@@ -2,6 +2,24 @@ import { ImageDataLike } from './types/ImageDataLike'
 import { Point } from './types/Point'
 
 /**
+ * Get previous point for given point
+ * @param index
+ */
+function getFirstPrevious(point: Point): Point {
+  if (point.x === 0) {
+    if (point.y === 0) {
+      return point
+    }
+
+    point.y -= 1
+  } else {
+    point.x -= 1
+  }
+
+  return point
+}
+
+/**
  * Moore neighborhood
  */
 const clockwiseOffset: {
@@ -58,64 +76,57 @@ export class ContourFinder {
   }
 
   /**
-   * Get previous point for given point
-   * @param index
-   */
-  getFirstPrevious(point: Point): Point {
-    if (point.x === 0) {
-      if (point.y === 0) {
-        return point
-      }
-
-      point.y -= 1
-    } else {
-      point.x -= 1
-    }
-
-    return point
-  }
-
-  /**
    * Returns next clockwise pixel based on current position and direction
    * @param previous previous point
    * @param boundary current boundary point
    */
-  nextClockwise(
-    previous: Point,
-    boundary: Point,
-    start = previous
-  ): {
+  nextClockwise({
+    previous,
+    boundary,
+    start = previous,
+  }: {
+    previous: Point
+    boundary: Point
+    start?: Point
+  }): {
     previous: Point
     boundary: Point
   } {
     const offset =
       clockwiseOffset[`${previous.x - boundary.x},${previous.y - boundary.y}`]
 
+    // next point in moore's neighberhood
     const nextPoint = {
       x: boundary.x + offset.x,
       y: boundary.y + offset.y,
     }
 
-    if (nextPoint.x === start.x && nextPoint.y === start.y) {
-      return {
-        previous,
-        boundary,
-      }
-    }
-
+    // handle invalid points for edge pixels
     if (
       nextPoint.x < 0 ||
       nextPoint.y < 0 ||
       nextPoint.x >= this.width ||
-      nextPoint.y >= this.height ||
-      this.data[this.pointToIndex(nextPoint)] !== 0
+      nextPoint.y >= this.height
     ) {
-      return this.nextClockwise(nextPoint, boundary, start)
+      return this.nextClockwise({ previous: nextPoint, boundary, start })
     }
 
-    return {
-      previous: nextPoint,
-      boundary,
+    // return if we have reached the start point of moore's neighberhood
+    if (nextPoint.x === start.x && nextPoint.y === start.y) {
+      return {
+        previous: nextPoint,
+        boundary,
+      }
+    }
+
+    // if found boundary pixel
+    if (this.data[this.pointToIndex(nextPoint)] === 0) {
+      return {
+        previous,
+        boundary: nextPoint,
+      }
+    } else {
+      return this.nextClockwise({ previous: nextPoint, boundary, start })
     }
   }
 
@@ -161,20 +172,25 @@ export class ContourFinder {
     /**
      * the point we entered first from
      */
-    const firstPrevious = this.getFirstPrevious(first)
+    const firstPrevious: Point = getFirstPrevious(first)
     /**
      * The point we entered current from
      */
-    let previous = firstPrevious
+    let previous: Point = { ...firstPrevious }
     /**
      * current known black pixel we're finding neighbours of
      */
-    let boundary = first
+    let boundary: Point = { ...first }
 
     // Jacob's stopping criterion: current pixel is revisited from same direction
-    while (previous !== firstPrevious || boundary !== first) {
+    while (
+      previous.x !== firstPrevious.x ||
+      previous.y !== firstPrevious.y ||
+      boundary.x !== first.x ||
+      boundary.y !== first.y
+    ) {
       // find next boundary pixel in moore's neighberhood and previous pixel
-      ;({ previous, boundary } = this.nextClockwise(previous, boundary))
+      ;({ previous, boundary } = this.nextClockwise({ previous, boundary }))
 
       // keep track of visited contour pixels
       this.visited[this.pointToIndex(boundary)] = true

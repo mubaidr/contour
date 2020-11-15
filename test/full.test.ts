@@ -17,14 +17,12 @@ describe('ContourFinder', () => {
   test('square', () => {
     const found = new ContourFinder(data.square).extract()
 
-    console.log(found)
-
     expect(found.length).toBe(1)
     expect(found[0]).toEqual([
       { x: 1, y: 1 },
-      { x: 1, y: 2 },
-      { x: 2, y: 2 },
       { x: 2, y: 1 },
+      { x: 2, y: 2 },
+      { x: 1, y: 2 },
     ])
   })
 
@@ -34,15 +32,15 @@ describe('ContourFinder', () => {
     expect(found.length).toBe(2)
     expect(found[0]).toEqual([
       { x: 1, y: 1 },
-      { x: 1, y: 2 },
-      { x: 2, y: 2 },
       { x: 2, y: 1 },
+      { x: 2, y: 2 },
+      { x: 1, y: 2 },
     ])
     expect(found[1]).toEqual([
       { x: 5, y: 2 },
-      { x: 5, y: 3 },
-      { x: 6, y: 3 },
       { x: 6, y: 2 },
+      { x: 6, y: 3 },
+      { x: 5, y: 3 },
     ])
   })
 
@@ -59,8 +57,6 @@ describe('ContourFinder', () => {
   test('connected', () => {
     const found = new ContourFinder(data.connected).extract()
 
-    console.log(found)
-
     expect(found.length).toBe(1)
   })
 
@@ -74,8 +70,6 @@ describe('ContourFinder', () => {
 
   test('filled', () => {
     const found = new ContourFinder(data.largeSquare).extract()
-
-    console.log(found)
 
     expect(found.length).toBe(1)
   })

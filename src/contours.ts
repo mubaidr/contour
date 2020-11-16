@@ -2,26 +2,6 @@ import { ImageDataLike } from './types/ImageDataLike'
 import { Point } from './types/Point'
 
 /**
- * Get previous point for given point
- * @param index
- */
-function getFirstPrevious(point: Point): Point {
-  const clone = { ...point }
-
-  if (clone.x === 0) {
-    if (clone.y === 0) {
-      return clone
-    }
-
-    clone.y -= 1
-  } else {
-    clone.x -= 1
-  }
-
-  return clone
-}
-
-/**
  * Moore neighborhood
  */
 const clockwiseOffset: {
@@ -75,6 +55,26 @@ export class ContourFinder {
    */
   pointToIndex(point: Point): number {
     return point.y * this.width + point.x
+  }
+
+  /**
+   * Get previous point for given point
+   * @param index
+   */
+  getPrevious(point: Point): Point {
+    const clone = { ...point }
+
+    if (clone.x === 0) {
+      if (clone.y === 0) {
+        return clone
+      }
+
+      clone.y -= 1
+    } else {
+      clone.x -= 1
+    }
+
+    return clone
   }
 
   /**
@@ -171,20 +171,15 @@ export class ContourFinder {
    */
   private traceContour(first: Point): Point[] {
     const contour: Point[] = [{ ...first }]
-    /**
-     * the point we entered first from
-     */
-    const firstPrevious = getFirstPrevious(first)
-    /**
-     * The point we entered current from
-     */
-    let previous = { ...firstPrevious }
-    /**
-     * current known black pixel we're finding neighbours of
-     */
+    // the point we entered first from
+    const firstPrevious = this.getPrevious(first)
+    // The point we entered current from
+    let previous = {
+      ...firstPrevious,
+    }
+    // current known black pixel we're finding neighbours of
     let boundary = { ...first }
 
-    // Jacob's stopping criterion: current pixel is revisited from same direction
     do {
       // find next boundary pixel in moore's neighberhood and previous pixel
       ;({ previous, boundary } = this.nextClockwise({
@@ -201,11 +196,13 @@ export class ContourFinder {
         this.visited[index] = true
       }
     } while (
+      // Jacob's stopping criterion: current pixel is revisited from same direction
       previous.x !== firstPrevious.x ||
       previous.y !== firstPrevious.y ||
       boundary.x !== first.x ||
       boundary.y !== first.y
     )
+
     return contour
   }
 

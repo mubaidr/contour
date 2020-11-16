@@ -18,6 +18,12 @@ function format(input: string[]): ImageDataLike {
 }
 
 // prettier-ignore
+export const onlySquare = format([
+  'AA',
+  'AA'
+])
+
+// prettier-ignore
 export const dot = format([
   '---',
   '-A-',

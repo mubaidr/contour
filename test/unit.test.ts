@@ -181,4 +181,32 @@ describe('nextClockwise', () => {
       })
     })
   })
+
+  describe('only square', () => {
+    test('0,0 -> 1,0', () => {
+      const cf = new ContourFinder(data.square)
+
+      expect(
+        cf.nextClockwise({
+          previous: {
+            x: 0,
+            y: 0,
+          },
+          boundary: {
+            x: 0,
+            y: 0,
+          },
+        })
+      ).toEqual({
+        previous: {
+          x: 0,
+          y: 0,
+        },
+        boundary: {
+          x: 1,
+          y: 0,
+        },
+      })
+    })
+  })
 })

@@ -26,6 +26,18 @@ describe('ContourFinder', () => {
     ])
   })
 
+  test('Only square', () => {
+    const found = new ContourFinder(data.onlySquare).extract()
+
+    expect(found.length).toBe(1)
+    expect(found[0]).toEqual([
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
+      { x: 1, y: 1 },
+      { x: 0, y: 1 },
+    ])
+  })
+
   test('multiple squares', () => {
     const found = new ContourFinder(data.squares).extract()
 

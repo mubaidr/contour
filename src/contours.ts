@@ -44,6 +44,13 @@ export class ContourFinder {
    * @param index
    */
   indexToPoint(index: number): Point {
+    if (index <= 0) {
+      return {
+        x: 0,
+        y: 0,
+      }
+    }
+
     const x = index % this.width
     const y = (index - x) / this.width
     return { x, y }
@@ -72,6 +79,26 @@ export class ContourFinder {
       clone.y -= 1
     } else {
       clone.x -= 1
+    }
+
+    return clone
+  }
+
+  /**
+   * Get next point for given point
+   * @param index
+   */
+  getNext(point: Point): Point {
+    const clone = { ...point }
+
+    if (clone.x === this.width - 1) {
+      if (clone.y === this.height - 1) {
+        return clone
+      }
+
+      clone.y += 1
+    } else {
+      clone.x += 1
     }
 
     return clone
@@ -173,12 +200,12 @@ export class ContourFinder {
     const contour: Point[] = [{ ...first }]
     // the point we entered first from
     const firstPrevious = this.getPrevious(first)
+    // current known black pixel we're finding neighbours of
+    let boundary = { ...first }
     // The point we entered current from
     let previous = {
       ...firstPrevious,
     }
-    // current known black pixel we're finding neighbours of
-    let boundary = { ...first }
 
     do {
       // find next boundary pixel in moore's neighberhood and previous pixel
@@ -203,6 +230,9 @@ export class ContourFinder {
       boundary.y !== first.y
     )
 
+    // TODO: criteria does not meet with trapezoid shape
+    // TODO: fix for edge case
+
     return contour
   }
 
@@ -214,7 +244,7 @@ export class ContourFinder {
     const contours: Point[][] = []
     let skipping = false
 
-    // find first black pixel from bottom-left to top-right
+    // find first black pixel from top-left to bottom-right
     for (let x = 0; x < this.width; x += 1) {
       for (let y = 0; y < this.height; y += 1) {
         const index = this.pointToIndex({ x, y })

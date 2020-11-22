@@ -18,12 +18,6 @@ function format(input: string[]): ImageDataLike {
 }
 
 // prettier-ignore
-export const onlySquare = format([
-  'AA',
-  'AA'
-])
-
-// prettier-ignore
 export const dot = format([
   '---',
   '-A-',
@@ -39,7 +33,29 @@ export const square = format([
 ])
 
 // prettier-ignore
-export const squaresEdge = format([
+export const trapezoid = format([
+  '------',
+  '--AA--',
+  '-AAAA-',
+  '------'
+])
+
+// prettier-ignore
+export const onlySquare = format([
+  'AA',
+  'AA'
+])
+
+export const multipleSquares = format([
+  '--------',
+  '-AA-----',
+  '-AA--BB-',
+  '-----BB-',
+  '--------',
+])
+
+// prettier-ignore
+export const edgeSquares = format([
   'AA---',
   'AA-BB',
   '---BB'
@@ -50,14 +66,6 @@ export const connected = format([
   '---AA----',
   '-AA--AA--',
   '-AA--AA--',
-])
-
-export const squares = format([
-  '--------',
-  '-AA-----',
-  '-AA--BB-',
-  '-----BB-',
-  '--------',
 ])
 
 export const largeSquare = format([

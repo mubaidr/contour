@@ -26,7 +26,21 @@ describe('ContourFinder', () => {
     ])
   })
 
-  test('Only square', () => {
+  test('trapezoid', () => {
+    const found = new ContourFinder(data.trapezoid).extract()
+
+    expect(found.length).toBe(1)
+    expect(found[0]).toEqual([
+      { x: 2, y: 1 },
+      { x: 3, y: 1 },
+      { x: 4, y: 2 },
+      { x: 3, y: 2 },
+      { x: 2, y: 2 },
+      { x: 1, y: 2 },
+    ])
+  })
+
+  test('onlySquare', () => {
     const found = new ContourFinder(data.onlySquare).extract()
 
     expect(found.length).toBe(1)
@@ -38,8 +52,8 @@ describe('ContourFinder', () => {
     ])
   })
 
-  test('multiple squares', () => {
-    const found = new ContourFinder(data.squares).extract()
+  test('multipleSquares', () => {
+    const found = new ContourFinder(data.multipleSquares).extract()
 
     expect(found.length).toBe(2)
     expect(found[0]).toEqual([
@@ -56,14 +70,22 @@ describe('ContourFinder', () => {
     ])
   })
 
-  test('edge squares', () => {
-    const found = new ContourFinder(data.squaresEdge).extract()
-
-    console.log(found)
+  test('edgeSquares', () => {
+    const found = new ContourFinder(data.edgeSquares).extract()
 
     expect(found.length).toBe(2)
-    expect(found[0]).toEqual([0, 1, 6, 5])
-    expect(found[1]).toEqual([8, 9, 14, 13])
+    expect(found[0]).toEqual([
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
+      { x: 1, y: 1 },
+      { x: 0, y: 1 },
+    ])
+    expect(found[1]).toEqual([
+      { x: 3, y: 1 },
+      { x: 4, y: 1 },
+      { x: 4, y: 2 },
+      { x: 3, y: 2 },
+    ])
   })
 
   test('connected', () => {
@@ -72,17 +94,21 @@ describe('ContourFinder', () => {
     expect(found.length).toBe(1)
   })
 
-  test('lots', () => {
-    const found = new ContourFinder(data.stuff).extract()
-
-    console.log(found)
-
-    expect(found.length).toBe(5)
-  })
-
-  test('filled', () => {
+  test('largeSquare', () => {
     const found = new ContourFinder(data.largeSquare).extract()
 
     expect(found.length).toBe(1)
+  })
+
+  test('tri', () => {
+    const found = new ContourFinder(data.tri).extract()
+
+    expect(found.length).toBe(1)
+  })
+
+  test('stuff', () => {
+    const found = new ContourFinder(data.stuff).extract()
+
+    expect(found.length).toBe(5)
   })
 })

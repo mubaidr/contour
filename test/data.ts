@@ -41,6 +41,14 @@ export const trapezoid = format([
 ])
 
 // prettier-ignore
+export const reversedTrapezoid = format([
+  '------',
+  '-AAAA-',
+  '--AA--',
+  '------',
+])
+
+// prettier-ignore
 export const onlySquare = format([
   'AA',
   'AA'

@@ -71,14 +71,14 @@ export class ContourFinder {
   getPrevious(point: Point): Point {
     const clone = { ...point }
 
-    if (clone.x === 0) {
-      if (clone.y === 0) {
+    if (clone.y === this.width - 1) {
+      if (clone.x === 0) {
         return clone
       }
 
-      clone.y -= 1
-    } else {
       clone.x -= 1
+    } else {
+      clone.y += 1
     }
 
     return clone
@@ -91,14 +91,14 @@ export class ContourFinder {
   getNext(point: Point): Point {
     const clone = { ...point }
 
-    if (clone.x === this.width - 1) {
-      if (clone.y === this.height - 1) {
+    if (clone.y === 0) {
+      if (clone.x === this.width - 1) {
         return clone
       }
 
-      clone.y += 1
-    } else {
       clone.x += 1
+    } else {
+      clone.y -= 1
     }
 
     return clone
@@ -230,7 +230,6 @@ export class ContourFinder {
       boundary.y !== first.y
     )
 
-    // TODO: criteria does not meet with trapezoid shape
     // TODO: fix for edge case
 
     return contour
@@ -245,8 +244,8 @@ export class ContourFinder {
     let skipping = false
 
     // find first black pixel from top-left to bottom-right
-    for (let y = 0; y < this.height; y += 1) {
-      for (let x = 0; x < this.width; x += 1) {
+    for (let x = 0; x < this.width; x += 1) {
+      for (let y = this.height - 1; y >= 0; y -= 1) {
         const index = this.pointToIndex({ x, y })
 
         // white pixel

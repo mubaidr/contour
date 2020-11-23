@@ -245,8 +245,8 @@ export class ContourFinder {
     let skipping = false
 
     // find first black pixel from top-left to bottom-right
-    for (let x = 0; x < this.width; x += 1) {
-      for (let y = 0; y < this.height; y += 1) {
+    for (let y = 0; y < this.height; y += 1) {
+      for (let x = 0; x < this.width; x += 1) {
         const index = this.pointToIndex({ x, y })
 
         // white pixel

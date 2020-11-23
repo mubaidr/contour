@@ -5,10 +5,12 @@ import { Point } from './types/Point'
  * Moore neighborhood
  */
 const clockwiseOffset: {
-  [key: string]: {
-    x: number
-    y: number
-  }
+  [key: string]:
+    | {
+        x: number
+        y: number
+      }
+    | undefined
 } = {
   '1,0': { x: 1, y: 1 }, // right --> right-down
   '1,1': { x: 0, y: 1 }, // right-down --> down
@@ -97,6 +99,7 @@ export class ContourFinder {
       }
 
       clone.x += 1
+      clone.y = this.height - 1
     } else {
       clone.y -= 1
     }
@@ -123,6 +126,11 @@ export class ContourFinder {
   } {
     const offset =
       clockwiseOffset[`${previous.x - boundary.x},${previous.y - boundary.y}`]
+
+    if (offset === undefined) {
+      // TODO: start from top left and get next black pixel
+      throw new Error('Not implemented!')
+    }
 
     // next point in moore's neighberhood
     const nextPoint = {

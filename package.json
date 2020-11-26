@@ -1,5 +1,6 @@
 {
-  "author": "Muhammad Ubaid Raza",
+  "author": "Muhammad Ubaid Raza <mubaidr@gmail.com>",
+  "description": "Extract shapes & contours in an image, for browsers and node.js.",
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.7.0",
     "@types/eslint": "^7.2.4",
@@ -32,11 +33,19 @@
     "dist",
     "src"
   ],
+  "homepage": "https://github.com/mubaidr/contour.js",
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
     }
   },
+  "keywords": [
+    "contour",
+    "shape",
+    "image-pocessing",
+    "moore-neighbourhood",
+    "tracing"
+  ],
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/contour.js.esm.js",

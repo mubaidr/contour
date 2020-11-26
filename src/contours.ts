@@ -5,12 +5,10 @@ import { Point } from './types/Point'
  * Moore neighborhood
  */
 const clockwiseOffset: {
-  [key: string]:
-    | {
-        x: number
-        y: number
-      }
-    | undefined
+  [key: string]: {
+    x: number
+    y: number
+  }
 } = {
   '1,0': { x: 1, y: 1 }, // right --> right-down
   '1,1': { x: 0, y: 1 }, // right-down --> down
@@ -42,69 +40,11 @@ export class ContourFinder {
   }
 
   /**
-   * Converts index to x,y postion of pixel
-   * @param index
-   */
-  indexToPoint(index: number): Point {
-    if (index <= 0) {
-      return {
-        x: 0,
-        y: 0,
-      }
-    }
-
-    const x = index % this.width
-    const y = (index - x) / this.width
-    return { x, y }
-  }
-
-  /**
    * Converts x,y to index postion of pixel
    * @param point
    */
   pointToIndex(point: Point): number {
     return point.y * this.width + point.x
-  }
-
-  /**
-   * Get previous point for given point
-   * @param index
-   */
-  getPrevious(point: Point): Point {
-    const clone = { ...point }
-
-    if (clone.y === this.width - 1) {
-      if (clone.x === 0) {
-        return clone
-      }
-
-      clone.x -= 1
-    } else {
-      clone.y += 1
-    }
-
-    return clone
-  }
-
-  /**
-   * Get next point for given point
-   * @param index
-   */
-  getNext(point: Point): Point {
-    const clone = { ...point }
-
-    if (clone.y === 0) {
-      if (clone.x === this.width - 1) {
-        return clone
-      }
-
-      clone.x += 1
-      clone.y = this.height - 1
-    } else {
-      clone.y -= 1
-    }
-
-    return clone
   }
 
   /**
@@ -126,11 +66,6 @@ export class ContourFinder {
   } {
     const offset =
       clockwiseOffset[`${previous.x - boundary.x},${previous.y - boundary.y}`]
-
-    if (offset === undefined) {
-      // TODO: start from top left and get next black pixel
-      throw new Error('Not implemented!')
-    }
 
     // next point in moore's neighberhood
     const nextPoint = {
@@ -207,7 +142,10 @@ export class ContourFinder {
   private traceContour(first: Point): Point[] {
     const contour: Point[] = [{ ...first }]
     // the point we entered first from
-    const firstPrevious = this.getPrevious(first)
+    const firstPrevious = {
+      x: first.x,
+      y: first.y + 1,
+    }
     // current known black pixel we're finding neighbours of
     let boundary = { ...first }
     // The point we entered current from
@@ -237,8 +175,6 @@ export class ContourFinder {
       boundary.x !== first.x ||
       boundary.y !== first.y
     )
-
-    // TODO: fix for edge case
 
     return contour
   }

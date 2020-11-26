@@ -59,10 +59,10 @@ describe('ContourFinder', () => {
 
     expect(found.length).toBe(1)
     expect(found[0]).toEqual([
+      { x: 0, y: 1 },
       { x: 0, y: 0 },
       { x: 1, y: 0 },
       { x: 1, y: 1 },
-      { x: 0, y: 1 },
     ])
   })
 

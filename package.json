@@ -33,7 +33,7 @@
     "dist",
     "src"
   ],
-  "homepage": "https://github.com/mubaidr/contour.js",
+  "homepage": "https://github.com/mubaidr/contours.ts",
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -48,8 +48,8 @@
   ],
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/contour.js.esm.js",
-  "name": "contour.js",
+  "module": "dist/contours.ts.esm.js",
+  "name": "contours.ts",
   "peerDependencies": {},
   "prettier": {
     "printWidth": 80,
@@ -59,7 +59,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mubaidr/contour.js.git"
+    "url": "git://github.com/mubaidr/contours.ts.git"
   },
   "scripts": {
     "analyze": "size-limit --why",
@@ -74,11 +74,11 @@
   "size-limit": [
     {
       "limit": "10 KB",
-      "path": "dist/contour.js.cjs.production.min.js"
+      "path": "dist/contours.ts.cjs.production.min.js"
     },
     {
       "limit": "10 KB",
-      "path": "dist/contour.js.esm.js"
+      "path": "dist/contours.ts.esm.js"
     }
   ],
   "typings": "dist/index.d.ts",

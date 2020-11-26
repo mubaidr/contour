@@ -10,10 +10,10 @@
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    "rootDir": ".",
+    "rootDir": "./src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true
   },
-  "include": ["src", "types", "test"]
+  "include": ["src", "types"]
 }

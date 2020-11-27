@@ -1,9 +1,9 @@
-# contours.ts
+# Contours.ts
 
 Extract shapes & contours in an image, for browsers and node.js.
 
-[![Build Status](https://travis-ci.org/mubaidr/contours.ts.svg?branch=master)](https://travis-ci.org/mubaidr/contours.ts)
-[![codebeat badge](https://codebeat.co/badges/8f27170b-909e-489f-ae93-459664c47422)](https://codebeat.co/projects/github-com-mubaidr-contours.ts-master)
+![CI](https://github.com/mubaidr/contours.ts/workflows/CI/badge.svg)
+[![codebeat badge](https://codebeat.co/badges/0c5399f3-60d7-466f-b87d-94dcc0b47d9f)](https://codebeat.co/projects/github-com-mubaidr-contours-ts-master)
 [![codecov](https://codecov.io/gh/mubaidr/contours.ts/branch/master/graph/badge.svg?token=3SJIBJ1679)](https://codecov.io/gh/mubaidr/contours.ts)
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 

@@ -219,4 +219,12 @@ export class ContourFinder {
 
     return contours
   }
+
+  /**
+   * Applies threshold to image data
+   */
+
+  public threshold(): ContourFinder {
+    return this
+  }
 }

@@ -1,1 +1,3 @@
-// export function approximate() {}
+export function approximate(): void {
+  console.log('yay')
+}

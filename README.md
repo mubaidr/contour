@@ -22,9 +22,29 @@ Extract shapes & contours in an image, for browsers and node.js.
 ```ts
 import { ContourFinder } from 'contours.ts'
 
-const contours = new ContourFinder(data).extract()
+/*
+if `imageData` is like `{
+  data: number[] | Uint8ClampedArray
+  width: number
+  height: number
+}`
+*/
 
-console.log(contours) // array of points
+const contours = new ContourFinder(imageData).threshold().extract()
+
+console.log(contours)
+
+/*
+- `contours` is collection of contours found in image
+- each contour is collection of points.
+
+e.g.
+[
+  [{x: 0, y: 0}, {x: 1, y: 0}], //contour
+  [{x: 0, y: 1}, {x: 0, y: 0}, {x: 1, y: 0}, {x: 1, y: 1}] // another contour
+]
+
+*/
 ```
 
 ### Install

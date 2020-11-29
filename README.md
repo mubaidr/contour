@@ -24,13 +24,13 @@ import { ContourFinder } from 'contours.ts'
 
 /*
 if `imageData` is like `{
-  data: number[] | Uint8ClampedArray
+  data: number[] | Uint8ClampedArray // Bit Image Data
   width: number
   height: number
 }`
 */
 
-const contours = new ContourFinder(imageData).threshold().extract()
+const contours = new ContourFinder(imageData).extract()
 
 console.log(contours)
 

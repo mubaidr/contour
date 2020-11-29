@@ -1,26 +1,7 @@
-import { ContourFinder } from '../src'
-import * as data from './data'
+import { ContourFinder } from '../../src'
+import * as data from '../data'
 
 describe('index <-> point conversion', () => {
-  // test('index to point', () => {
-  //   const cf = new ContourFinder(data.dot)
-
-  //   expect(cf.indexToPoint(0)).toEqual({
-  //     x: 0,
-  //     y: 0,
-  //   })
-
-  //   expect(cf.indexToPoint(4)).toEqual({
-  //     x: 1,
-  //     y: 1,
-  //   })
-
-  //   expect(cf.indexToPoint(8)).toEqual({
-  //     x: 2,
-  //     y: 2,
-  //   })
-  // })
-
   test('point to index', () => {
     const cf = new ContourFinder(data.dot)
 

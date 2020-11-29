@@ -1,5 +1,5 @@
-import { ContourFinder } from '../src'
-import * as data from './data'
+import { ContourFinder } from '../../src'
+import * as data from '../data'
 
 describe('ContourFinder', () => {
   test('dot', () => {

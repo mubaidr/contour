@@ -24,7 +24,7 @@ const clockwiseOffset: {
  * Contour tracing on a black and white image
  */
 export class ContourFinder {
-  private readonly data: Uint8ClampedArray | number[]
+  private data: Uint8ClampedArray | number[]
   private readonly width: number
   private readonly height: number
 
@@ -221,10 +221,30 @@ export class ContourFinder {
   }
 
   /**
-   * Applies threshold to image data
+   * Converts Image data to Bit Data (single-channel) and applies threshold and gausian blur
+   * @param threshold
    */
+  public toBitData(threshold = 85): ContourFinder {
+    const bitData = new Array(this.width * this.height)
+    const channels = this.data.length / (this.width * this.height)
 
-  public threshold(): ContourFinder {
+    // data already bit data
+    if (channels === 1) return this
+
+    // check for valid blur radius
+    for (let i = 0; i < this.data.length; i += channels) {
+      bitData.push(
+        0.2126 * this.data[i] +
+          0.7152 * this.data[i + 1] +
+          0.0722 * this.data[i + 2] >=
+          threshold
+          ? 255
+          : 0
+      )
+    }
+
+    this.data = bitData
+
     return this
   }
 }

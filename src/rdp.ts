@@ -1,38 +1,19 @@
-// https://rosettacode.org/wiki/Ramer-Douglas-Peucker_line_simplification#JavaScript
+// https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
 
 import { Point } from './types/Point'
 
-export function RDP(contour: Point[], eps: number): Point[] {
-  const lastIndex = contour.length - 1
-  const firstPoint = contour[0]
-  const lastPoint = contour[lastIndex]
-  const x21 = lastPoint.x - firstPoint.x
-  const y21 = lastPoint.y - firstPoint.y
+function distance(p1: Point, p2: Point): number {
+  return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)
+}
 
-  const [dMax, x] = contour
-    .slice(1, lastIndex)
-    .map((p: { x: number; y: number }) =>
-      Math.abs(
-        y21 * p.x -
-          x21 * p.y +
-          lastPoint.x * firstPoint.y -
-          lastPoint.y * firstPoint.x
-      )
-    )
-    .reduce(
-      (p: number[], c: number, i: number) => {
-        const v = Math.max(p[0], c)
-        return [v, v === p[0] ? p[1] : i + 1]
-      },
-      [-1, 0]
-    )
-
-  if (dMax > eps) {
-    return [
-      ...RDP(contour.slice(0, x + 1), eps),
-      ...RDP(contour.slice(x), eps).slice(1),
-    ]
+function pointLineDistance(point: Point, start: Point, end: Point): number {
+  if (start.x === end.x && start.y === end.y) {
+    return distance(point, start)
   }
 
-  return [contour[0], contour[lastIndex]]
+  // const n = Math.abs()
+}
+
+export function RDP(contour: Point[], eps: number): Point[] {
+  return [contour[0]]
 }

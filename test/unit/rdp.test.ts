@@ -1,4 +1,7 @@
+import { ContourFinder } from '../../src/contours'
 import { RDP } from '../../src/rdp'
+import * as data from '../data'
+
 describe('Name of the group', () => {
   test('should reduce simple square', () => {
     const data = [
@@ -8,7 +11,9 @@ describe('Name of the group', () => {
       { x: 2, y: 2 },
     ]
 
-    expect(RDP(data, 0)).toEqual([
+    const output = RDP(data, 0)
+
+    expect(output).toEqual([
       { x: 1, y: 2 },
       { x: 1, y: 1 },
       { x: 2, y: 1 },
@@ -26,9 +31,25 @@ describe('Name of the group', () => {
       { x: 2, y: 2 },
     ]
 
-    console.log(RDP(data, 0.5))
+    const output = RDP(data, 0)
 
-    expect(RDP(data, 0.5)).toEqual([
+    expect(output).toEqual([
+      { x: 1, y: 2 },
+      { x: 2, y: 1 },
+      { x: 3, y: 1 },
+      { x: 4, y: 2 },
+      { x: 2, y: 2 },
+    ])
+  })
+
+  test('should reduce largeSquare', () => {
+    const found = new ContourFinder(data.largeSquare).extract()
+    const output = RDP(found[0], 0.5)
+
+    console.log(found[0])
+    console.log(output)
+
+    expect(output).toEqual([
       { x: 1, y: 2 },
       { x: 2, y: 1 },
       { x: 3, y: 1 },

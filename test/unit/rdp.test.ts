@@ -3,9 +3,9 @@ import { RDP } from '../../src/rdp'
 import * as data from '../data'
 
 describe('Name of the group', () => {
-  test('should reduce simple square', () => {
-    const found = new ContourFinder(data.largeSquare).extract()
-    const output = RDP(found[0], 0)
+  test('should reduce square', () => {
+    const found = new ContourFinder(data.square).extract()
+    const output = RDP(found[0], 1)
 
     console.log(found[0])
     console.log(output)
@@ -20,7 +20,7 @@ describe('Name of the group', () => {
 
   test('should reduce largeSquare', () => {
     const found = new ContourFinder(data.largeSquare).extract()
-    const output = RDP(found[0], 0)
+    const output = RDP(found[0], 1)
 
     console.log(found[0])
     console.log(output)

@@ -3,24 +3,29 @@
 import { Point } from './types/Point'
 
 function distance(p1: Point, p2: Point): number {
-  return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)
+  return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2)
 }
 
-function perpendicularDistance(point: Point, start: Point, end: Point): number {
+export function perpendicularDistance(
+  point: Point,
+  start: Point,
+  end: Point
+): number {
   if (start.x === end.x && start.y === end.y) {
     return distance(point, start)
   }
 
-  const n =
-    ((end.x - start.x) * (start.y - point.y)) /
-    ((start.x - point.x) * (end.y - start.y))
-
-  const d = (end.x - start.x) ** 2 + (end.y - start.y) ** 2
-
-  return Math.abs(n / d)
+  return (
+    Math.abs(
+      (start.y - end.y) * point.x +
+        (end.x - start.x) * point.y +
+        start.x * end.y -
+        end.x * start.y
+    ) / distance(start, end)
+  )
 }
 
-export function RDP(contour: Point[], epsilon: number): Point[] {
+export function RDP(contour: Point[], epsilon = 1): Point[] {
   const endIndex = contour.length - 1
   let collection: Point[] = []
   let maxDistance = 0

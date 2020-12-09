@@ -1,4 +1,7 @@
 # Contours.ts
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Extract contours & shapes from an image, for browsers and node.js.
 
@@ -87,3 +90,22 @@ Thanks to these awesome dev/projects, as this project is heavily inspired by the
 
 - [benfoxall/contours](https://github.com/benfoxall/contours)
 - [dkendal/moore-neighbor_contour_tracer](https://github.com/Dkendal/Moore-Neighbor_Contour_Tracer)
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://benjaminbenben.com"><img src="https://avatars3.githubusercontent.com/u/51385?v=4" width="100px;" alt=""/><br /><sub><b>Ben Foxall</b></sub></a><br /><a href="https://github.com/mubaidr/contours.ts/commits?author=benfoxall" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

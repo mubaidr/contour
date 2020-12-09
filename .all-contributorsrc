@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "benfoxall",
+      "name": "Ben Foxall",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/51385?v=4",
+      "profile": "https://benjaminbenben.com",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "contours.ts",
+  "projectOwner": "mubaidr",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}

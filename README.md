@@ -1,6 +1,9 @@
 # Contours.ts
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Extract contours & shapes from an image, for browsers and node.js.
@@ -86,7 +89,7 @@ Muhammad Ubaid Raza - [@mubaidr](https://twitter.com/mubaidr) - mubaidr@gmail.co
 
 ## Acknowledgements
 
-Thanks to these awesome dev/projects, as this project is heavily inspired by the these projects:
+This project is heavily inspired by the these:
 
 - [benfoxall/contours](https://github.com/benfoxall/contours)
 - [dkendal/moore-neighbor_contour_tracer](https://github.com/Dkendal/Moore-Neighbor_Contour_Tracer)
@@ -106,6 +109,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

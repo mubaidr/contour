@@ -125,4 +125,28 @@ describe('ContourFinder', () => {
 
     expect(found.length).toBe(5)
   })
+
+  test('extract from 3-channel image', () => {
+    const found = new ContourFinder(data.dot3Channel).extract()
+
+    expect(found.length).toBe(1)
+    expect(found[0]).toEqual([
+      {
+        x: 1,
+        y: 1,
+      },
+    ])
+  })
+
+  test('extract from 4-channel image', () => {
+    const found = new ContourFinder(data.dot4Channel).extract()
+
+    expect(found.length).toBe(1)
+    expect(found[0]).toEqual([
+      {
+        x: 1,
+        y: 1,
+      },
+    ])
+  })
 })

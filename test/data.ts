@@ -1,21 +1,49 @@
 import { ImageDataLike } from '../src/types/ImageDataLike'
 
-// ImageData-like object, single channel data
+/**
+ * ImageData-like object, single channel data
+ */
 function format(input: string[]): ImageDataLike {
   const width = input[0].length
   const height = input.length
-  const data = new Uint8ClampedArray(width * height)
-
-  input
+  const data = input
     .join('')
     .split('')
     .map((v: string) => (v === '-' ? 255 : 0))
-    .forEach((v: number, i: number) => {
-      data[i] = v
-    })
 
   return { data, width, height }
 }
+
+/**
+ * ImageData-like object, multi channel channel data
+ */
+function toMultiChannel(image: ImageDataLike, channels = 3): ImageDataLike {
+  const data: number[] = []
+
+  image.data.forEach((d: number) => {
+    for (let i = 0; i < channels; i += 1) {
+      data.push(d)
+    }
+  })
+
+  image.data = data
+
+  return image
+}
+
+// prettier-ignore
+export const dot3Channel = toMultiChannel(format([
+  '---',
+  '-A-',
+  '---'
+]))
+
+// prettier-ignore
+export const dot4Channel = toMultiChannel(format([
+  '---',
+  '-A-',
+  '---'
+]), 4)
 
 // prettier-ignore
 export const dot = format([

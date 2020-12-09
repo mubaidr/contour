@@ -1,19 +1,13 @@
 # Contours.ts
 
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-
 Extract contours & shapes from an image, for browsers and node.js.
+
+[![NPM](https://nodei.co/npm/contours.ts.png?compact=true)](https://nodei.co/npm/contours.ts/)
 
 ![CI](https://github.com/mubaidr/contours.ts/workflows/CI/badge.svg)
 [![codecov](https://codecov.io/gh/mubaidr/contours.ts/branch/master/graph/badge.svg?token=3SJIBJ1679)](https://codecov.io/gh/mubaidr/contours.ts)
 [![codebeat badge](https://codebeat.co/badges/0c5399f3-60d7-466f-b87d-94dcc0b47d9f)](https://codebeat.co/projects/github-com-mubaidr-contours-ts-master)
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
-
-[![NPM](https://nodei.co/npm/contours.ts.png?compact=true)](https://nodei.co/npm/contours.ts/)
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg)](#contributors-)
 
 ## Features
 
@@ -50,7 +44,7 @@ Or
 ```ts
 /*
 if `imageData` is like `{
-  data: number[] | Uint8ClampedArray // Bit Image Data
+  data: number[] | Uint8ClampedArray
   width: number
   height: number
 }`
@@ -63,15 +57,11 @@ const contours = new ContourFinder(imageData).extract()
 console.log(contours)
 
 /*
-- `contours` is an array of contours found in image
-- each contour is collection of points.
-
-e.g.
+logs:
 [
   [{x: 0, y: 0}, {x: 1, y: 0}], //contour
   [{x: 0, y: 1}, {x: 0, y: 0}, {x: 1, y: 0}, {x: 1, y: 1}] // another contour
 ]
-
 */
 ```
 

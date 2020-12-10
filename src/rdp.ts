@@ -70,6 +70,9 @@ export function RDP(contour: Point[], epsilon = 1): Point[] {
   let maxDistance = 0
   let index = 0
 
+  // no need to simplify 2 points... duh!
+  if (contour.length <= 2) return contour
+
   for (let i = 1; i < endIndex; i += 1) {
     const distance = perpendicularDistance(
       contour[i],

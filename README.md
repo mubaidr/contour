@@ -57,7 +57,7 @@ if `imageData` is like `{
 
 import { ContourFinder } from 'contours.ts'
 
-const contours = new ContourFinder(imageData).extract()
+const { contours } = new ContourFinder(imageData)
 
 console.log(contours)
 
@@ -65,7 +65,20 @@ console.log(contours)
 logs:
 [
   [{x: 0, y: 0}, {x: 1, y: 0}], //contour
-  [{x: 0, y: 1}, {x: 0, y: 0}, {x: 1, y: 0}, {x: 1, y: 1}] // another contour
+  [{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}, {x: 3, y: 3}] // another contour
+]
+*/
+
+// or simplify contours using RDP
+const { simplifiedContours } = new ContourFinder(imageData).simplify(epsilon)
+
+console.log(simplifiedContours)
+
+/*
+logs:
+[
+  [{x: 0, y: 0}, {x: 1, y: 0}], //contour
+  [{x: 0, y: 0}, {x: 3, y: 3}] // another contour
 ]
 */
 ```

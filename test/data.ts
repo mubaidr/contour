@@ -32,6 +32,13 @@ function toMultiChannel(image: ImageDataLike, channels = 3): ImageDataLike {
 }
 
 // prettier-ignore
+export const line =format([
+  'A--',
+  '-A-',
+  '--A'
+])
+
+// prettier-ignore
 export const dot3Channel = toMultiChannel(format([
   '---',
   '-A-',

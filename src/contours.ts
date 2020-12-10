@@ -1,3 +1,4 @@
+import { RDP } from './rdp'
 import { ImageDataLike } from './types/ImageDataLike'
 import { Point } from './types/Point'
 
@@ -27,6 +28,7 @@ export class ContourFinder {
   private data: Uint8ClampedArray | number[]
   private readonly width: number
   private readonly height: number
+  public readonly contours: Point[][] = []
 
   /**
    * Caches information about visited points
@@ -41,6 +43,8 @@ export class ContourFinder {
     if (this.data.length !== this.width * this.height) {
       this.toBitData()
     }
+
+    this.extract()
   }
 
   /**
@@ -190,8 +194,7 @@ export class ContourFinder {
    * Returns contour collection
    * @param imageData
    */
-  public extract(): Point[][] {
-    const contours: Point[][] = []
+  private extract(): ContourFinder {
     let skipping = false
 
     // find first black pixel from top-left to bottom-right
@@ -215,7 +218,7 @@ export class ContourFinder {
         this.visited[index] = true
 
         // we will trace contour starting from this black pixel
-        contours.push(
+        this.contours.push(
           this.traceContour({
             x,
             y,
@@ -224,14 +227,14 @@ export class ContourFinder {
       }
     }
 
-    return contours
+    return this
   }
 
   /**
    * Converts Image data to Bit Data (single-channel) and applies threshold and gausian blur
    * @param threshold
    */
-  public toBitData(threshold = 85): ContourFinder {
+  private toBitData(threshold = 85): ContourFinder {
     const bitData: number[] = []
     const channels = this.data.length / (this.width * this.height)
 
@@ -251,6 +254,17 @@ export class ContourFinder {
     }
 
     this.data = bitData
+
+    return this
+  }
+
+  /**
+   * Simplifies contours using Ramer–Douglas–Peucker algorithm
+   */
+  public simplify(epsilon = 1): ContourFinder {
+    this.contours.forEach((contour, index) => {
+      this.contours[index] = RDP(contour, epsilon)
+    })
 
     return this
   }

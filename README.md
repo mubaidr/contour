@@ -44,19 +44,30 @@ Or
 
 [Contours.ts](https://unpkg.com/contours.ts)
 
-### Example
+### Examples
+
+#### Input Type
+
+`ContourFinder` expects image data (multi-channel image data is suported) in following format:
 
 ```ts
 /*
-if `imageData` is like `{
+const imageData: {
   data: number[] | Uint8ClampedArray
   width: number
   height: number
-}`
+} = {
+  data: [0,0,0],
+  width: 1,
+  height: 1
+}
 */
+```
 
+#### Get Contours
+
+```ts
 import { ContourFinder } from 'contours.ts'
-
 const { contours } = new ContourFinder(imageData)
 
 console.log(contours)
@@ -64,12 +75,17 @@ console.log(contours)
 /*
 logs:
 [
-  [{x: 0, y: 0}, {x: 1, y: 0}], //contour
+  [{x: 0, y: 0}, {x: 1, y: 0}], // contour
   [{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}, {x: 3, y: 3}] // another contour
 ]
 */
+```
 
-// or simplify contours using RDP
+#### Simplify Contours
+
+```ts
+import { ContourFinder } from 'contours.ts'
+// simplify contours using Ramer–Douglas–Peucker algorithm
 const { simplifiedContours } = new ContourFinder(imageData).simplify(epsilon)
 
 console.log(simplifiedContours)
@@ -77,8 +93,27 @@ console.log(simplifiedContours)
 /*
 logs:
 [
-  [{x: 0, y: 0}, {x: 1, y: 0}], //contour
+  [{x: 0, y: 0}, {x: 1, y: 0}], // contour
   [{x: 0, y: 0}, {x: 3, y: 3}] // another contour
+]
+*/
+```
+
+#### Approximate Shapes
+
+```ts
+import { ContourFinder } from 'contours.ts'
+// Or approximate contours to shapes
+const { shapeCollection } = new ContourFinder(imageData).approximate()
+
+console.log(shapeCollection)
+
+/*
+logs:
+[
+  {x: 0, y: 0, width: 1, height: 1}, // Rect
+  {x: 1, y: 1, radius: 1}, // Circle
+  [{x: 0, y: 0}, {x: 3, y: 3}] // Polygon
 ]
 */
 ```

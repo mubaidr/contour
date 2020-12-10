@@ -1,6 +1,7 @@
 import { RDP } from './rdp'
 import { ImageDataLike } from './types/ImageDataLike'
 import { Point } from './types/Point'
+import { Circle, Rectangle } from './types/ShapeType'
 
 /**
  * Moore neighborhood
@@ -267,5 +268,15 @@ export class ContourFinder {
     })
 
     return this
+  }
+
+  /**
+   * Approximate contours to shapes
+   */
+  public approximate(): Array<Rectangle | Circle | Point[]> {
+    this.simplify()
+
+    // TODO: approximate contours
+    return []
   }
 }

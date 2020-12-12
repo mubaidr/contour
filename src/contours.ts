@@ -22,29 +22,53 @@ const clockwiseOffset: {
   '1,-1': { x: 1, y: 0 }, // top-right --> right
 }
 
+interface ContourFinderOptions {
+  blur: boolean
+  threshold: number
+}
+
 /**
  * Contour tracing on a black and white image
  */
 export class ContourFinder {
+  private static readonly THRESHOLD = 85
+
   private data: Uint8ClampedArray | number[]
   private readonly width: number
   private readonly height: number
+  private readonly channels: number
+
   public readonly contours: Point[][] = []
+
+  private isSimplified = false
 
   /**
    * Caches information about visited points
    */
   private visited: { [key: number]: boolean } = {}
 
-  constructor(imageData: ImageDataLike) {
+  constructor(
+    imageData: ImageDataLike,
+    options: ContourFinderOptions = {
+      blur: false,
+      threshold: 85,
+    }
+  ) {
     this.data = imageData.data
     this.width = imageData.width
     this.height = imageData.height
+    this.channels = this.data.length / (this.width * this.height)
 
-    if (this.data.length !== this.width * this.height) {
-      this.toBitData()
+    // preprocess image if multi channel
+    if (this.channels > 1) {
+      // blurs the image for better edge detection
+      if (options.blur) this.blur()
+
+      // threshold image to get bit data
+      if (options.threshold > 0) this.toBitData(options.threshold)
     }
 
+    // perform contour detection
     this.extract()
   }
 
@@ -52,8 +76,59 @@ export class ContourFinder {
    * Converts x,y to index postion of pixel
    * @param point
    */
-  pointToIndex(point: Point): number {
+  private pointToIndex(point: Point): number {
     return point.y * this.width + point.x
+  }
+
+  /**
+   * Blurs the image
+   */
+  private blur(): void {
+    for (let x = 0; x < this.width; x += 1) {
+      for (let y = 0; y < this.height; y += 1) {
+        const i = this.pointToIndex({
+          x,
+          y,
+        })
+
+        // average each channel of the pixel
+        for (let c = 0; c < this.channels; c += 1) {
+          this.data[i + c] =
+            Object.values(clockwiseOffset).reduce((prev, curr) => {
+              prev +=
+                this.data[
+                  this.pointToIndex({
+                    x: x + curr.x,
+                    y: y + curr.y,
+                  })
+                ] + c
+
+              return prev
+            }, this.data[i + c]) / 9
+        }
+      }
+    }
+  }
+
+  /**
+   * Threshold image data
+   */
+  private toBitData(threshold: number): void {
+    const bitData: number[] = []
+
+    // pixel average
+    for (let i = 0; i < this.data.length; i += this.channels) {
+      bitData.push(
+        0.2126 * this.data[i] +
+          0.7152 * this.data[i + 1] +
+          0.0722 * this.data[i + 2] >=
+          threshold
+          ? 255
+          : 0
+      )
+    }
+
+    this.data = bitData
   }
 
   /**
@@ -195,7 +270,7 @@ export class ContourFinder {
    * Returns contour collection
    * @param imageData
    */
-  private extract(): ContourFinder {
+  private extract(): void {
     let skipping = false
 
     // find first black pixel from top-left to bottom-right
@@ -227,36 +302,6 @@ export class ContourFinder {
         )
       }
     }
-
-    return this
-  }
-
-  /**
-   * Converts Image data to Bit Data (single-channel) and applies threshold and gausian blur
-   * @param threshold
-   */
-  private toBitData(threshold = 85): ContourFinder {
-    const bitData: number[] = []
-    const channels = this.data.length / (this.width * this.height)
-
-    // data already bit data
-    if (channels === 1) return this
-
-    // check for valid blur radius
-    for (let i = 0; i < this.data.length; i += channels) {
-      bitData.push(
-        0.2126 * this.data[i] +
-          0.7152 * this.data[i + 1] +
-          0.0722 * this.data[i + 2] >=
-          threshold
-          ? 255
-          : 0
-      )
-    }
-
-    this.data = bitData
-
-    return this
   }
 
   /**
@@ -267,6 +312,8 @@ export class ContourFinder {
       this.contours[index] = RDP(contour, epsilon)
     })
 
+    this.isSimplified = true
+
     return this
   }
 
@@ -274,7 +321,7 @@ export class ContourFinder {
    * Approximate contours to shapes
    */
   public approximate(): Array<Rectangle | Circle | Point[]> {
-    this.simplify()
+    if (!this.isSimplified) this.simplify()
 
     // TODO: approximate contours
     return []

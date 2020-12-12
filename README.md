@@ -68,7 +68,10 @@ const imageData: {
 
 ```ts
 import { ContourFinder } from 'contours.ts'
-const { contours } = new ContourFinder(imageData)
+const { contours } = new ContourFinder(imageData, {
+  blur: true // blurs the image data
+  threshold: 85 // threshold image data
+})
 
 console.log(contours)
 

@@ -1,33 +1,6 @@
 import { ContourFinder } from '../../src'
 import * as data from '../data'
 
-describe('index <-> point conversion', () => {
-  test('point to index', () => {
-    const cf = new ContourFinder(data.dot)
-
-    expect(
-      cf.pointToIndex({
-        x: 0,
-        y: 0,
-      })
-    ).toBe(0)
-
-    expect(
-      cf.pointToIndex({
-        x: 1,
-        y: 1,
-      })
-    ).toBe(4)
-
-    expect(
-      cf.pointToIndex({
-        x: 2,
-        y: 2,
-      })
-    ).toBe(8)
-  })
-})
-
 describe('nextClockwise', () => {
   describe('dot', () => {
     test('0,4 -> 0,4', () => {

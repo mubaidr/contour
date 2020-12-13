@@ -50,25 +50,17 @@ export const circle =format([
 ])
 
 // prettier-ignore
-export const dot3Channel = toMultiChannel(format([
-  '---',
-  '-A-',
-  '---'
-]))
-
-// prettier-ignore
-export const dot4Channel = toMultiChannel(format([
-  '---',
-  '-A-',
-  '---'
-]), 4)
-
-// prettier-ignore
 export const dot = format([
   '---',
   '-A-',
   '---'
 ])
+
+// prettier-ignore
+export const dot3Channel = toMultiChannel(dot)
+
+// prettier-ignore
+export const dot4Channel = toMultiChannel(dot, 4)
 
 // prettier-ignore
 export const square = format([
@@ -143,6 +135,9 @@ export const tri = format([
   '--AAAAAAAA----',
   '--------------',
 ])
+
+// prettier-ignore
+export const tri4Channel = toMultiChannel(tri)
 
 export const stuff = format([
   '------------------------------',

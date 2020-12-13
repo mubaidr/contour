@@ -185,18 +185,26 @@ describe('simplify', () => {
 
 describe('preprocess: blur', () => {
   test('extract and simplify dot using RDP', () => {
-    const found = new ContourFinder(data.tri, {
+    const found = new ContourFinder(data.tri4Channel, {
       blur: true,
     }).simplify().contours
 
     expect(found.length).toBe(1)
     expect(found[0]).toEqual([
-      { x: 2, y: 8 },
-      { x: 2, y: 2 },
-      { x: 2, y: 1 },
-      { x: 8, y: 7 },
+      { x: 0, y: 3 },
+      { x: 0, y: 1 },
+      { x: 0, y: 0 },
+      { x: 11, y: 0 },
+      { x: 13, y: 0 },
+      { x: 13, y: 1 },
+      { x: 13, y: 2 },
+      { x: 8, y: 2 },
+      { x: 6, y: 2 },
+      { x: 6, y: 5 },
       { x: 9, y: 8 },
-      { x: 5, y: 8 },
+      { x: 3, y: 8 },
+      { x: 2, y: 8 },
+      { x: 2, y: 5 },
     ])
   })
 })

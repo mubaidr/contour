@@ -23,8 +23,8 @@ const clockwiseOffset: {
 }
 
 interface ContourFinderOptions {
-  blur: boolean
-  threshold: number
+  blur?: boolean
+  threshold?: number
 }
 
 /**
@@ -59,13 +59,16 @@ export class ContourFinder {
     this.height = imageData.height
     this.channels = this.data.length / (this.width * this.height)
 
+    const blur = options.blur ?? false
+    const threshold = options.threshold ?? 85
+
     // preprocess image if multi channel
     if (this.channels > 1) {
       // blurs the image for better edge detection
-      if (options.blur) this.blur()
+      if (blur) this.blur()
 
       // threshold image to get bit data
-      if (options.threshold > 0) this.toBitData(options.threshold)
+      this.toBitData(threshold)
     }
 
     // perform contour detection
@@ -93,7 +96,7 @@ export class ContourFinder {
 
         // average each channel of the pixel
         for (let c = 0; c < this.channels; c += 1) {
-          this.data[i + c] =
+          const avg =
             Object.values(clockwiseOffset).reduce((prev, curr) => {
               prev +=
                 this.data[
@@ -105,6 +108,8 @@ export class ContourFinder {
 
               return prev
             }, this.data[i + c]) / 9
+
+          this.data[i + c] = avg
         }
       }
     }
@@ -181,9 +186,9 @@ export class ContourFinder {
         previous,
         boundary: nextPoint,
       }
-    } else {
-      return this.nextClockwise({ previous: nextPoint, boundary, start })
     }
+
+    return this.nextClockwise({ previous: nextPoint, boundary, start })
   }
 
   /*
@@ -321,9 +326,14 @@ export class ContourFinder {
    * Approximate contours to shapes
    */
   public approximate(): Array<Rectangle | Circle | Point[]> {
+    const collection: Array<Rectangle | Circle | Point[]> = []
+
     if (!this.isSimplified) this.simplify()
 
-    // TODO: approximate contours
-    return []
+    this.contours.forEach((contour) => {
+      collection.push(contour)
+    })
+
+    return collection
   }
 }

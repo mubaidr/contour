@@ -39,6 +39,17 @@ export const line =format([
 ])
 
 // prettier-ignore
+export const circle =format([
+  '---OOO--',
+  '--O---O-',
+  '-O-----O',
+  'O-------O',
+  '-O-----O',
+  '--O---O-',
+  '---OOO--'
+])
+
+// prettier-ignore
 export const dot3Channel = toMultiChannel(format([
   '---',
   '-A-',

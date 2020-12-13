@@ -1,4 +1,4 @@
-import { Point } from './types/Point'
+import { Point, Polygon } from './types/ShapeType'
 
 function distance(p1: Point, p2: Point): number {
   return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2)
@@ -64,9 +64,9 @@ end
  * @param contour array of polygon/contour points
  * @param epsilon
  */
-export function RDP(contour: Point[], epsilon = 1): Point[] {
+export function RDP(contour: Polygon, epsilon = 1): Polygon {
   const endIndex = contour.length - 1
-  let collection: Point[] = []
+  let collection: Polygon = []
   let maxDistance = 0
   let index = 0
 

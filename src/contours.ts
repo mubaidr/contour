@@ -1,7 +1,6 @@
 import { RDP } from './rdp'
 import { ImageDataLike } from './types/ImageDataLike'
-import { Point } from './types/Point'
-import { Circle, Rectangle } from './types/ShapeType'
+import { Point, Polygon, ShapeCollection } from './types/ShapeType'
 
 /**
  * Moore neighborhood
@@ -31,14 +30,12 @@ interface ContourFinderOptions {
  * Contour tracing on a black and white image
  */
 export class ContourFinder {
-  private static readonly THRESHOLD = 85
-
   private data: Uint8ClampedArray | number[]
   private readonly width: number
   private readonly height: number
   private readonly channels: number
 
-  public readonly contours: Point[][] = []
+  public readonly contours: Polygon[] = []
 
   private isSimplified = false
 
@@ -231,8 +228,8 @@ export class ContourFinder {
    * @param first first black pixel found
    * @param firstPrevious Previous pixel for first
    */
-  private traceContour(first: Point): Point[] {
-    const contour: Point[] = [{ ...first }]
+  private traceContour(first: Point): Polygon {
+    const contour: Polygon = [{ ...first }]
     // the point we entered first from
     const firstPrevious = {
       x: first.x,
@@ -325,13 +322,21 @@ export class ContourFinder {
   /**
    * Approximate contours to shapes
    */
-  public approximate(): Array<Rectangle | Circle | Point[]> {
-    const collection: Array<Rectangle | Circle | Point[]> = []
+  public approximate(): ShapeCollection {
+    const collection: ShapeCollection = {
+      points: [],
+      lines: [],
+      triangles: [],
+      recangles: [],
+      circles: [],
+      polygons: [],
+    }
 
     if (!this.isSimplified) this.simplify()
 
     this.contours.forEach((contour) => {
-      collection.push(contour)
+      // TODO: detect contour shape
+      // TODO: map to shape interface
     })
 
     return collection

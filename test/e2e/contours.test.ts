@@ -213,36 +213,37 @@ describe('Approximation', () => {
   test('should approximate to point', () => {
     const found = new ContourFinder(data.dot).approximate()
 
-    // expect(found.points.length).toBe(1)
+    expect(found.points.length).toBe(1)
   })
 
   test('should approximate to line', () => {
     const found = new ContourFinder(data.line).approximate()
 
-    // expect(found.lines.length).toBe(1)
+    expect(found.lines.length).toBe(1)
   })
 
   test('should approximate to triangle', () => {
     const found = new ContourFinder(data.tri).approximate()
 
-    // expect(found.triangles.length).toBe(1)
+    expect(found.triangles.length).toBe(1)
   })
 
   test('should approximate to rectangle', () => {
     const found = new ContourFinder(data.tri).approximate()
 
-    // expect(found.recangles.length).toBe(1)
+    expect(found.recangles.length).toBe(1)
   })
 
   test('should approximate to circles', () => {
-    const found = new ContourFinder(data.tri).approximate()
+    const found = new ContourFinder(data.circle).approximate()
 
-    // expect(found.circles).toBe(1)
+    expect(found.circles).toBe(1)
   })
 
   test('should approximate to polygons', () => {
     const found = new ContourFinder(data.stuff).approximate()
 
-    // expect(found.polygons.length).toBe(1)
+    expect(found.polygons.length).toBe(2)
+    expect(found.recangles.length).toBe(3)
   })
 })

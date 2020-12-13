@@ -1,4 +1,6 @@
+import { ContourFinder } from '../../src/contours'
 import { perpendicularDistance, RDP } from '../../src/rdp'
+import * as data from '../data'
 
 describe('Name of the group', () => {
   test('perpendicularDistance', () => {
@@ -37,28 +39,28 @@ describe('Name of the group', () => {
     ])
   })
 
-  // test('should reduce square', () => {
-  //   const output = RDP(
-  //     [
-  //       { x: 1, y: 3 },
-  //       { x: 1, y: 2 },
-  //       { x: 1, y: 1 },
-  //       { x: 2, y: 1 },
-  //       { x: 3, y: 1 },
-  //       { x: 3, y: 2 },
-  //       { x: 3, y: 3 },
-  //       { x: 2, y: 3 },
-  //     ],
-  //     0.01
-  //   )
+  // TOFIX: Fix RDP tests for closed small shapes
+  test('should reduce square', () => {
+    const found = new ContourFinder(data.square).simplify().contours
 
-  //   console.log(output)
+    expect(found.length).toBe(1)
+    expect(found[0]).toEqual([
+      { x: 1, y: 3 },
+      { x: 1, y: 1 },
+      { x: 3, y: 1 },
+      { x: 3, y: 3 },
+    ])
+  })
 
-  //   expect(output).toEqual([
-  //     { x: 1, y: 3 },
-  //     { x: 1, y: 1 },
-  //     { x: 3, y: 1 },
-  //     { x: 3, y: 3 },
-  //   ])
-  // })
+  test('should reduce triangle', () => {
+    const found = new ContourFinder(data.tri).simplify().contours
+
+    expect(found.length).toBe(1)
+    expect(found[0]).toEqual([
+      { x: 1, y: 3 },
+      { x: 1, y: 1 },
+      { x: 3, y: 1 },
+      { x: 3, y: 3 },
+    ])
+  })
 })

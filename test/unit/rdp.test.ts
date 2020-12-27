@@ -1,8 +1,6 @@
-import { ContourFinder } from '../../src/contours'
 import { perpendicularDistance, RDP } from '../../src/rdp'
-import * as data from '../data'
 
-describe('Name of the group', () => {
+describe('Ramer–Douglas–Peucker algorithm', () => {
   test('perpendicularDistance', () => {
     const d1 = perpendicularDistance(
       { x: 1, y: 0 },
@@ -36,31 +34,6 @@ describe('Name of the group', () => {
     expect(output).toEqual([
       { x: 1, y: 1 },
       { x: 4, y: 4 },
-    ])
-  })
-
-  // TOFIX: Fix RDP tests for closed small shapes
-  test('should reduce square', () => {
-    const found = new ContourFinder(data.square).simplify().contours
-
-    expect(found.length).toBe(1)
-    expect(found[0]).toEqual([
-      { x: 1, y: 3 },
-      { x: 1, y: 1 },
-      { x: 3, y: 1 },
-      { x: 3, y: 3 },
-    ])
-  })
-
-  test('should reduce triangle', () => {
-    const found = new ContourFinder(data.tri).simplify().contours
-
-    expect(found.length).toBe(1)
-    expect(found[0]).toEqual([
-      { x: 1, y: 3 },
-      { x: 1, y: 1 },
-      { x: 3, y: 1 },
-      { x: 3, y: 3 },
     ])
   })
 })

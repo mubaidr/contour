@@ -1,7 +1,7 @@
 import { RDP } from './rdp'
 import { ImageDataLike } from './types/ImageDataLike'
 import { Point, Polygon, ShapeCollection } from './types/ShapeType'
-import { getLinesAngle, getLinesDistance } from './utilities'
+import { getLinesAngle, getLinesDifference } from './utilities'
 
 /**
  * Moore neighborhood
@@ -347,7 +347,7 @@ export class ContourFinder {
         collection.triangles.push(contour)
       } else if (length === 4) {
         for (let i = 0; i < contour.length; i += 1) {
-          console.log(getLinesAngle, getLinesDistance)
+          console.log(getLinesAngle, getLinesDifference)
           // const angle = 0 // getAngleInLines()
 
           // if (angle !== 90) {

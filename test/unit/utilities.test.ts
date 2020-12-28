@@ -1,4 +1,10 @@
-import { getLinesAngle, getLinesDifference } from '../../src/utilities'
+import { Polygon } from '../../src/types/ShapeType'
+import {
+  getLinesAngle,
+  getLinesDifference,
+  isCircle,
+  isRectangle,
+} from '../../src/utilities'
 
 describe('Angle between lines', () => {
   test('should get angle between lines: 0', () => {
@@ -110,12 +116,62 @@ describe('Differnece between lines lengths', () => {
 
 describe('isRectangle', () => {
   test('should check if contour has right angles on all sides', () => {
-    console.log('Not implemented')
+    const contour: Polygon = [
+      { x: 0, y: 0 },
+      { x: 4, y: 0 },
+      { x: 4, y: 2 },
+      { x: 0, y: 2 },
+    ]
+
+    expect(isRectangle(contour)).toBeTruthy()
+  })
+
+  test('should fail if contour does not have right angles on all sides', () => {
+    const contour: Polygon = [
+      { x: 0, y: 0 },
+      { x: 4, y: 0 },
+      { x: 6, y: 2 },
+      { x: 0, y: 2 },
+    ]
+
+    expect(isRectangle(contour)).toBeFalsy()
   })
 })
 
 describe('isSquare', () => {
   test('should check if length of all lines is equal', () => {
-    console.log('Not implemented')
+    const contour: Polygon = [
+      { x: 0, y: 0 },
+      { x: 5, y: 0 },
+      { x: 5, y: 5 },
+      { x: 0, y: 5 },
+    ]
+
+    expect(isRectangle(contour)).toBeTruthy()
+  })
+})
+
+describe('isCircle', () => {
+  test('should check if contour isCircle', () => {
+    const contour: Polygon = [
+      { x: 0, y: 20 },
+      { x: 5, y: 19 },
+      { x: 10, y: 17 },
+      { x: 15, y: 13 },
+      { x: 20, y: 0 },
+      { x: 15, y: -13 },
+      { x: 10, y: -17 },
+      { x: 5, y: -19 },
+      { x: 0, y: -20 },
+      { x: -5, y: -19 },
+      { x: -10, y: -17 },
+      { x: -15, y: -13 },
+      { x: -20, y: 0 },
+      { x: -15, y: 13 },
+      { x: -10, y: 17 },
+      { x: -5, y: 19 },
+    ]
+
+    expect(isCircle(contour)).toBeTruthy()
   })
 })

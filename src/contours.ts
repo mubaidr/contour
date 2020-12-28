@@ -1,7 +1,7 @@
 import { RDP } from './rdp'
 import { ImageDataLike } from './types/ImageDataLike'
 import { Point, Polygon, ShapeCollection } from './types/ShapeType'
-import { getLinesAngle, getLinesDifference } from './utilities'
+import { isCircle, isRectangle, isSquare } from './utilities'
 
 /**
  * Moore neighborhood
@@ -345,22 +345,15 @@ export class ContourFinder {
         collection.lines.push(contour)
       } else if (length === 3) {
         collection.triangles.push(contour)
-      } else if (length === 4) {
-        for (let i = 0; i < contour.length; i += 1) {
-          console.log(getLinesAngle, getLinesDifference)
-          // const angle = 0 // getAngleInLines()
-
-          // if (angle !== 90) {
-          //   collection.polygons.push(contour)
-          //   break
-          // }
+      } else if (length === 4 && isRectangle(contour)) {
+        if (isSquare(contour)) {
+          collection.squares.push(contour)
+        } else {
+          collection.recangles.push(contour)
         }
-
-        collection.recangles.push(contour)
+      } else if (isCircle(contour)) {
+        collection.circles.push(contour)
       } else {
-        // TODO: detect contour circle shape
-        // TODO: map to shape interface
-
         collection.polygons.push(contour)
       }
     })

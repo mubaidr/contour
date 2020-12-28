@@ -3,12 +3,6 @@ export interface Point {
   y: number
 }
 
-export interface Circle {
-  x: number
-  y: number
-  radius: number
-}
-
 export interface Polygon extends Array<Point> {}
 
 export interface ShapeCollection {
@@ -17,6 +11,6 @@ export interface ShapeCollection {
   triangles: Polygon[]
   squares: Polygon[]
   recangles: Polygon[]
-  circles: Circle[]
+  circles: Polygon[]
   polygons: Polygon[]
 }

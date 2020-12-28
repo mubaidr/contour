@@ -18,7 +18,7 @@ Extract contours & shapes from an image, for browsers and node.js.
 
 ### Extract Contours
 
-### Approximate Contours to Shapes
+### Approximate Contours to Common Shapes (Triangle, Rectangle, Square, Circle)
 
 ## How to use
 
@@ -114,9 +114,20 @@ console.log(shapeCollection)
 /*
 logs:
 [
-  {x: 0, y: 0, width: 1, height: 1}, // Rect
-  {x: 1, y: 1, radius: 1}, // Circle
-  [{x: 0, y: 0}, {x: 3, y: 3}] // Polygon
+  {
+    points: [{x: 0, y: 0}],
+    lines: [{x: 0, y: 0}, {x: 3, y: 3}],
+    triangles: [],
+    squares: [
+      { x: 0, y: 0 },
+      { x: 5, y: 0 },
+      { x: 5, y: 5 },
+      { x: 0, y: 5 },
+    ],
+    recangles: [],
+    circles: [],
+    polygons: [],
+  }
 ]
 */
 ```

@@ -1,29 +1,5 @@
-import { Point, Polygon } from './types/ShapeType'
-
-// distance between two points
-function distance(p1: Point, p2: Point): number {
-  return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2)
-}
-
-// perpendicular distance of a point from a line
-export function perpendicularDistance(
-  point: Point,
-  start: Point,
-  end: Point
-): number {
-  if (start.x === end.x && start.y === end.y) {
-    return distance(point, start)
-  }
-
-  return (
-    Math.abs(
-      (start.y - end.y) * point.x +
-        (end.x - start.x) * point.y +
-        start.x * end.y -
-        end.x * start.y
-    ) / distance(start, end)
-  )
-}
+import { Polygon } from './types/ShapeType'
+import { perpendicularDistance } from './utilities'
 
 /*
 

@@ -115,14 +115,14 @@ console.log(shapeCollection)
 logs:
 [
   {
-    points: [{x: 0, y: 0}],
-    lines: [{x: 0, y: 0}, {x: 3, y: 3}],
+    points: [[{x: 0, y: 0}]],
+    lines: [[{x: 0, y: 0}, {x: 3, y: 3}]],
     triangles: [],
     squares: [
-      { x: 0, y: 0 },
+      [{ x: 0, y: 0 },
       { x: 5, y: 0 },
       { x: 5, y: 5 },
-      { x: 0, y: 5 },
+      { x: 0, y: 5 },]
     ],
     recangles: [],
     circles: [],

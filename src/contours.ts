@@ -1,4 +1,4 @@
-import { RDP } from './rdp'
+import polylineSimplification from 'simplify-js'
 import { ImageDataLike } from './types/ImageDataLike'
 import { Point, Polygon, ShapeCollection } from './types/ShapeType'
 import { isCircle, isRectangle, isSquare } from './utilities'
@@ -312,7 +312,15 @@ export class ContourFinder {
    */
   public simplify(epsilon = 1): ContourFinder {
     this.contours.forEach((contour, index) => {
-      this.contours[index] = RDP(contour, epsilon)
+      // insert first point to make it circular for proper simplification
+      contour.push({
+        ...contour[0],
+      })
+
+      this.contours[index] = polylineSimplification(contour, epsilon)
+
+      // remove the dummy inserted point
+      this.contours[index].pop()
     })
 
     this.isSimplified = true

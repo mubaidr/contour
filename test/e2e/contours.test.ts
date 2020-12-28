@@ -225,6 +225,8 @@ describe('Approximation', () => {
   test('should approximate to triangle', () => {
     const found = new ContourFinder(data.tri).approximate()
 
+    console.log(found)
+
     expect(found.triangles.length).toBe(1)
   })
 

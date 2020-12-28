@@ -1,9 +1,11 @@
 import { Point, Polygon } from './types/ShapeType'
 
+// distance between two points
 function distance(p1: Point, p2: Point): number {
   return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2)
 }
 
+// perpendicular distance of a point from a line
 export function perpendicularDistance(
   point: Point,
   start: Point,

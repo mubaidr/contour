@@ -37,6 +37,15 @@ export class ContourFinder {
   private readonly channels: number
 
   public readonly contours: Polygon[] = []
+  public readonly collection: ShapeCollection = {
+    points: [],
+    lines: [],
+    triangles: [],
+    squares: [],
+    recangles: [],
+    circles: [],
+    polygons: [],
+  }
 
   private isSimplified = false
 
@@ -332,40 +341,30 @@ export class ContourFinder {
    * Approximate contours to shapes
    */
   public approximate(): ShapeCollection {
-    const collection: ShapeCollection = {
-      points: [],
-      lines: [],
-      triangles: [],
-      squares: [],
-      recangles: [],
-      circles: [],
-      polygons: [],
-    }
-
     if (!this.isSimplified) this.simplify()
 
     this.contours.forEach((contour) => {
       const { length } = contour
 
       if (length === 1) {
-        collection.points.push(contour[0])
+        this.collection.points.push(contour[0])
       } else if (length === 2) {
-        collection.lines.push(contour)
+        this.collection.lines.push(contour)
       } else if (length === 3) {
-        collection.triangles.push(contour)
+        this.collection.triangles.push(contour)
       } else if (length === 4 && isRectangle(contour)) {
         if (isSquare(contour)) {
-          collection.squares.push(contour)
+          this.collection.squares.push(contour)
         } else {
-          collection.recangles.push(contour)
+          this.collection.recangles.push(contour)
         }
       } else if (isCircle(contour)) {
-        collection.circles.push(contour)
+        this.collection.circles.push(contour)
       } else {
-        collection.polygons.push(contour)
+        this.collection.polygons.push(contour)
       }
     })
 
-    return collection
+    return this.collection
   }
 }

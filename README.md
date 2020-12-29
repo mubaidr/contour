@@ -89,9 +89,9 @@ logs:
 ```ts
 import { ContourFinder } from 'contours.ts'
 // simplify contours using Ramer–Douglas–Peucker algorithm
-const { simplifiedContours } = new ContourFinder(imageData).simplify(epsilon)
+const { contours } = new ContourFinder(imageData).simplify(epsilon)
 
-console.log(simplifiedContours)
+console.log(contours)
 
 /*
 logs:
@@ -107,7 +107,7 @@ logs:
 ```ts
 import { ContourFinder } from 'contours.ts'
 // Or approximate contours to shapes
-const { shapeCollection } = new ContourFinder(imageData).approximate()
+const { contours, shapeCollection } = new ContourFinder(imageData).approximate()
 
 console.log(shapeCollection)
 

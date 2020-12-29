@@ -1,7 +1,7 @@
 import { ContourFinder } from '../../src'
 import * as data from '../data'
 
-describe('Default', () => {
+describe('shapes', () => {
   test('dot', () => {
     const found = new ContourFinder(data.dot).contours
 
@@ -203,32 +203,28 @@ describe('preprocess: blur', () => {
 })
 
 describe('Approximation', () => {
-  test('should approximate to point', () => {
+  test.only('should approximate to point', () => {
     const found = new ContourFinder(data.dot).approximate()
 
     expect(found.points.length).toBe(1)
   })
 
-  test('should approximate to line', () => {
+  test.only('should approximate to line', () => {
     const found = new ContourFinder(data.line).approximate()
 
     expect(found.lines.length).toBe(1)
   })
 
-  test('should approximate to triangle', () => {
-    const found = new ContourFinder(data.tri).approximate()
-
-    console.log(found)
-
-    console.log(found.triangles.length)
-
-    expect(found.triangles.length).toBe(1)
-  })
-
-  test('should approximate to rectangle', () => {
+  test.only('should approximate to rectangle', () => {
     const found = new ContourFinder(data.largeSquare).approximate()
 
     expect(found.recangles.length).toBe(1)
+  })
+
+  test('should approximate to triangle', () => {
+    const found = new ContourFinder(data.tri).approximate()
+
+    expect(found.triangles.length).toBe(1)
   })
 
   // test('should approximate to circles', () => {
@@ -239,7 +235,7 @@ describe('Approximation', () => {
   //   expect(found.circles.length).toBe(1)
   // })
 
-  test('should approximate to polygons', () => {
+  test.only('should approximate to polygons', () => {
     const found = new ContourFinder(data.stuff).simplify(0.5).approximate()
 
     expect(found.squares.length).toBe(1)
